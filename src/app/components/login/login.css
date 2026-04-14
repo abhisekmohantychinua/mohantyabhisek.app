@@ -1,0 +1,37 @@
+@reference "../../../styles.css";
+
+.login__page {
+  @apply flex items-center justify-center min-h-screen;
+}
+
+.login__card {
+  @apply w-full max-w-md;
+}
+
+.login__title {
+  @apply text-2xl font-semibold text-center pt-6 pb-0 m-0;
+}
+
+.login__form {
+  @apply flex flex-col gap-5;
+}
+
+.login__field {
+  @apply flex flex-col gap-2;
+}
+
+.login__field label {
+  @apply font-medium text-sm;
+}
+
+.login__error {
+  @apply text-red-500 text-xs;
+}
+
+.login__password-input {
+  @apply w-full;
+}
+
+.login__submit {
+  @apply w-full;
+}

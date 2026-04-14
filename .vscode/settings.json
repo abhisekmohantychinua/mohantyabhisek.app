@@ -3,5 +3,6 @@
     {
       "text": "Generate a commit message with exactly ONE header from: Feature, Refactor, Fix, Test, Todo. Do NOT use multiple sections. Format: Header followed by ':' and newline bullet points. Each bullet must start with '-' and use past tense verbs like Added, Updated, Removed, Refactored, Implemented. Keep it concise and well grouped. Do NOT use conventional commit format."
     }
-  ]
+  ],
+  "cSpell.words": ["primeuix"]
 }

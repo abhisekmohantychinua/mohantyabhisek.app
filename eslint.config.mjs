@@ -75,6 +75,16 @@ const config = defineConfig([
           format: ['camelCase', 'UPPER_CASE'],
         },
 
+        // Variables that end with "Store" should be PascalCase
+        {
+          selector: 'variable',
+          filter: {
+            regex: 'Store$',
+            match: true,
+          },
+          format: ['PascalCase', 'camelCase'],
+        },
+
         // Types / Interfaces → PascalCase
         {
           selector: 'typeLike',
@@ -116,7 +126,7 @@ const config = defineConfig([
     },
   },
   {
-    files: ['**/*.service.ts'], // fixed pattern
+    files: ['**/*-service.ts'], // fixed pattern
     plugins: {
       jsdoc,
     },
@@ -124,7 +134,7 @@ const config = defineConfig([
       'jsdoc/require-jsdoc': [
         'warn',
         {
-          contexts: ['ExportNamedDeclaration > FunctionDeclaration'],
+          contexts: ['MethodDefinition[kind="method"]'],
         },
       ],
       'jsdoc/require-param': 'warn',

@@ -1,0 +1,55 @@
+<p-toast />
+<div class="login__page">
+  <p-card class="login__card">
+    <ng-template #header>
+      <h2 class="login__title">Sign In</h2>
+    </ng-template>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login__form">
+      <div class="login__field">
+        <label for="username">Username</label>
+        <p-inputgroup>
+          <p-inputgroup-addon>
+            <i class="pi pi-user"></i>
+          </p-inputgroup-addon>
+          <input
+            pInputText
+            id="username"
+            formControlName="username"
+            placeholder="Enter username"
+            autocomplete="username"
+          />
+        </p-inputgroup>
+        @if (loginForm.controls.username.touched && loginForm.controls.username.invalid) {
+          <small class="login__error">Username is required.</small>
+        }
+      </div>
+      <div class="login__field">
+        <label for="password">Password</label>
+        <p-inputgroup>
+          <p-inputgroup-addon>
+            <i class="pi pi-lock"></i>
+          </p-inputgroup-addon>
+          <p-password
+            id="password"
+            formControlName="password"
+            placeholder="Enter password"
+            [feedback]="false"
+            [toggleMask]="true"
+            autocomplete="current-password"
+            styleClass="login__password-input"
+          />
+        </p-inputgroup>
+        @if (loginForm.controls.password.touched && loginForm.controls.password.invalid) {
+          <small class="login__error">Password is required.</small>
+        }
+      </div>
+      <p-button
+        type="submit"
+        label="Login"
+        [loading]="loading()"
+        [disabled]="loading()"
+        styleClass="login__submit"
+      />
+    </form>
+  </p-card>
+</div>
