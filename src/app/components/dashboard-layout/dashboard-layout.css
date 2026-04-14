@@ -1,0 +1,43 @@
+@reference "../../../styles.css";
+
+.dashboard-layout {
+  @apply flex min-h-screen;
+}
+
+.dashboard-layout__sidebar {
+  @apply flex flex-col w-64 shrink-0;
+}
+
+.dashboard-layout__brand {
+  @apply flex items-center gap-3 px-5 py-4;
+}
+
+.dashboard-layout__brand-icon {
+  @apply text-xl;
+}
+
+.dashboard-layout__brand-text {
+  @apply text-lg font-semibold;
+}
+
+.dashboard-layout__nav {
+  @apply flex flex-col gap-1 px-3 flex-1;
+}
+
+.dashboard-layout__nav-item {
+  @apply flex items-center gap-3 px-3 py-2.5 rounded-lg no-underline transition-colors duration-200 cursor-pointer
+    text-surface-600 dark:text-surface-400
+    hover:bg-surface-100 hover:text-surface-900 dark:hover:bg-surface-800 dark:hover:text-surface-0;
+}
+
+.dashboard-layout__nav-item--active {
+  @apply font-medium bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary;
+}
+
+.dashboard-layout__sidebar-footer {
+  @apply flex items-center justify-between px-3 py-3 mt-auto;
+}
+
+.dashboard-layout__content {
+  @apply flex-1 p-6 overflow-auto;
+}

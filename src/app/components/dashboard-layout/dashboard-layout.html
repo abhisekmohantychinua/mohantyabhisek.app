@@ -1,0 +1,32 @@
+<div class="dashboard-layout">
+  <aside class="dashboard-layout__sidebar">
+    <div class="dashboard-layout__brand">
+      <i class="pi pi-bolt dashboard-layout__brand-icon"></i>
+      <span class="dashboard-layout__brand-text">Dashboard</span>
+    </div>
+    <p-divider />
+    <nav class="dashboard-layout__nav">
+      @for (item of menuItems; track item.label) {
+        <a
+          pRipple
+          [routerLink]="item.routerLink"
+          routerLinkActive="dashboard-layout__nav-item--active"
+          [routerLinkActiveOptions]="{ exact: item.routerLink === '/' }"
+          class="dashboard-layout__nav-item"
+        >
+          <i [class]="item.icon"></i>
+          <span>{{ item.label }}</span>
+        </a>
+      }
+    </nav>
+    <p-divider />
+    <div class="dashboard-layout__sidebar-footer">
+      <app-theme-toggle />
+      <app-logout />
+    </div>
+  </aside>
+  <p-divider layout="vertical" />
+  <main class="dashboard-layout__content">
+    <router-outlet />
+  </main>
+</div>
