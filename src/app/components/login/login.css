@@ -1,7 +1,7 @@
 @reference "../../../styles.css";
 
 .login__page {
-  @apply flex items-center justify-center min-h-screen;
+  @apply relative flex items-center justify-center min-h-screen;
 }
 
 .login__card {
@@ -32,6 +32,10 @@
   @apply w-full;
 }
 
+.login__actions {
+  @apply flex justify-between items-center;
+}
+
 .login__submit {
-  @apply w-full;
+  @apply w-auto;
 }

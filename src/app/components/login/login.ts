@@ -11,6 +11,7 @@ import { PasswordModule } from 'primeng/password';
 import { ToastModule } from 'primeng/toast';
 
 import { AuthenticationService } from '../../services/authentication-service';
+import { ThemeToggle } from '../theme-toggle/theme-toggle';
 
 @Component({
   selector: 'app-login',
@@ -23,6 +24,7 @@ import { AuthenticationService } from '../../services/authentication-service';
     InputTextModule,
     PasswordModule,
     ToastModule,
+    ThemeToggle,
   ],
   providers: [MessageService],
   templateUrl: './login.html',

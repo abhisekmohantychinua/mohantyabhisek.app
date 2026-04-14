@@ -43,13 +43,16 @@
           <small class="login__error">Password is required.</small>
         }
       </div>
-      <p-button
-        type="submit"
-        label="Login"
-        [loading]="loading()"
-        [disabled]="loading()"
-        styleClass="login__submit"
-      />
+      <div class="login__actions">
+        <app-theme-toggle />
+        <p-button
+          type="submit"
+          label="Login"
+          [loading]="loading()"
+          [disabled]="loading()"
+          styleClass="login__submit"
+        />
+      </div>
     </form>
   </p-card>
 </div>
