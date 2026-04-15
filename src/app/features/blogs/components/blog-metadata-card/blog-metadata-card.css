@@ -1,0 +1,35 @@
+@reference "../../../../../styles.css";
+
+.metadata-card {
+  @apply flex flex-col gap-3 rounded-lg border p-4
+    border-surface-200 bg-surface-50 dark:border-surface-700 dark:bg-surface-800;
+}
+
+.metadata-card--loading,
+.metadata-card--empty {
+  @apply items-center justify-center py-4;
+}
+
+.metadata-card__placeholder {
+  @apply text-sm italic
+    text-surface-400 dark:text-surface-500;
+}
+
+.metadata-card__heading {
+  @apply m-0 text-base font-semibold
+    text-surface-800 dark:text-surface-100;
+}
+
+.metadata-card__field {
+  @apply flex flex-col gap-0.5;
+}
+
+.metadata-card__label {
+  @apply text-xs font-medium uppercase tracking-wide
+    text-surface-400 dark:text-surface-500;
+}
+
+.metadata-card__value {
+  @apply m-0 text-sm leading-relaxed
+    text-surface-700 dark:text-surface-300;
+}

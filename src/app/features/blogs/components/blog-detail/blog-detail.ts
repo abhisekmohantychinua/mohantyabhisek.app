@@ -24,6 +24,7 @@ import type { BlogMetadata } from '../../models/blog-metadata';
 import { BlogMetadataService } from '../../services/blog-metadata-service';
 import { BlogService } from '../../services/blog-service';
 import { BlogFormDialog } from '../blog-form-dialog/blog-form-dialog';
+import { BlogMetadataCard } from '../blog-metadata-card/blog-metadata-card';
 import { ContentViewer } from '../content-viewer/content-viewer';
 
 @Component({
@@ -37,6 +38,7 @@ import { ContentViewer } from '../content-viewer/content-viewer';
     ProgressSpinnerModule,
     TagModule,
     BlogFormDialog,
+    BlogMetadataCard,
     ContentViewer,
   ],
   providers: [ConfirmationService],

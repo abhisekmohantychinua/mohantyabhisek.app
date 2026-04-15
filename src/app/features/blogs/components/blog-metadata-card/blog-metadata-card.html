@@ -1,0 +1,21 @@
+@if (loading()) {
+  <div class="metadata-card metadata-card--loading">
+    <span class="metadata-card__placeholder">Loading metadata…</span>
+  </div>
+} @else if (metadata(); as meta) {
+  <div class="metadata-card">
+    <h3 class="metadata-card__heading">SEO Metadata</h3>
+    <div class="metadata-card__field">
+      <span class="metadata-card__label">Meta Title</span>
+      <p class="metadata-card__value">{{ meta.title }}</p>
+    </div>
+    <div class="metadata-card__field">
+      <span class="metadata-card__label">Meta Description</span>
+      <p class="metadata-card__value">{{ meta.description }}</p>
+    </div>
+  </div>
+} @else {
+  <div class="metadata-card metadata-card--empty">
+    <span class="metadata-card__placeholder">No SEO metadata available.</span>
+  </div>
+}
