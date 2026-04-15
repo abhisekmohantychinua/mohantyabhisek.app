@@ -1,0 +1,57 @@
+# Node / Angular
+
+node_modules
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# Build output (we rebuild inside Docker)
+
+dist
+.tmp
+.out
+.angular
+
+# Environment files
+
+.env
+.env.*
+!.env.example
+
+# Logs
+
+logs
+*.log
+
+# OS / Editor junk
+
+.DS_Store
+Thumbs.db
+
+# IDEs
+
+.vscode
+.idea
+*.iml
+
+# Git
+
+.git
+.gitignore
+
+# Docker files (optional depending on setup)
+
+docker-compose.yml
+Dockerfile*
+.dockerignore
+
+# Tests / coverage (not needed in production image)
+
+coverage
+*.spec.ts
+*.test.ts
+
+# Misc
+
+README.md
+LICENSE
