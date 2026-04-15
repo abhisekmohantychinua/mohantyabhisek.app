@@ -8,4 +8,19 @@
   } @else {
     <app-blog-grid [blogs]="blogs()" />
   }
+
+  <p-button
+    class="blogs__fab"
+    icon="pi pi-plus"
+    [rounded]="true"
+    [raised]="true"
+    (onClick)="createDialogVisible.set(true)"
+    aria-label="Create blog"
+  />
+
+  <app-blog-form-dialog
+    [(visible)]="createDialogVisible"
+    [submitHandler]="createHandler"
+    (saved)="onBlogCreated()"
+  />
 </section>

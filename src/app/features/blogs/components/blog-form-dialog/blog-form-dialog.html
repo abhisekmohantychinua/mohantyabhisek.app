@@ -1,0 +1,159 @@
+<p-dialog
+  [(visible)]="visible"
+  [header]="dialogHeader()"
+  [modal]="true"
+  [closable]="false"
+  [maximizable]="true"
+  [style]="{ width: '80vw' }"
+  [breakpoints]="{ '1199px': '90vw', '575px': '95vw' }"
+>
+  <p-stepper
+    [value]="activeStep()"
+    [linear]="!isEditMode()"
+    (valueChange)="onStepChange($any($event))"
+  >
+    <p-step-list>
+      <p-step [value]="1">Basic Info</p-step>
+      <p-step [value]="2">Topics</p-step>
+      <p-step [value]="3">FAQs</p-step>
+      <p-step [value]="4">Content</p-step>
+      <p-step [value]="5">Metadata</p-step>
+    </p-step-list>
+
+    <p-step-panels>
+      <p-step-panel [value]="1">
+        <ng-template #content let-activateCallback="activateCallback">
+          <div class="form-dialog__panel">
+            <app-blog-basic-info-step [blog]="blog()" [isEditMode]="isEditMode()" />
+            <div class="form-dialog__actions">
+              <p-button
+                label="Cancel"
+                severity="secondary"
+                [outlined]="true"
+                (onClick)="cancel()"
+              />
+              <p-button
+                label="Next"
+                icon="pi pi-arrow-right"
+                iconPos="right"
+                (onClick)="goNext(activateCallback)"
+              />
+            </div>
+          </div>
+        </ng-template>
+      </p-step-panel>
+
+      <p-step-panel [value]="2">
+        <ng-template #content let-activateCallback="activateCallback">
+          <div class="form-dialog__panel">
+            <app-blog-topics-step [initialTopics]="blog()?.topics" />
+            <div class="form-dialog__actions">
+              <p-button
+                label="Cancel"
+                severity="secondary"
+                [outlined]="true"
+                (onClick)="cancel()"
+              />
+              <p-button
+                label="Back"
+                icon="pi pi-arrow-left"
+                severity="secondary"
+                (onClick)="goBack(activateCallback)"
+              />
+              <p-button
+                label="Next"
+                icon="pi pi-arrow-right"
+                iconPos="right"
+                (onClick)="goNext(activateCallback)"
+              />
+            </div>
+          </div>
+        </ng-template>
+      </p-step-panel>
+
+      <p-step-panel [value]="3">
+        <ng-template #content let-activateCallback="activateCallback">
+          <div class="form-dialog__panel">
+            <app-blog-faqs-step [initialFaqs]="blog()?.faqs" />
+            <div class="form-dialog__actions">
+              <p-button
+                label="Cancel"
+                severity="secondary"
+                [outlined]="true"
+                (onClick)="cancel()"
+              />
+              <p-button
+                label="Back"
+                icon="pi pi-arrow-left"
+                severity="secondary"
+                (onClick)="goBack(activateCallback)"
+              />
+              <p-button
+                label="Next"
+                icon="pi pi-arrow-right"
+                iconPos="right"
+                (onClick)="goNext(activateCallback)"
+              />
+            </div>
+          </div>
+        </ng-template>
+      </p-step-panel>
+
+      <p-step-panel [value]="4">
+        <ng-template #content let-activateCallback="activateCallback">
+          <div class="form-dialog__panel">
+            <app-blog-content-step [initialContent]="blog()?.content" />
+            <div class="form-dialog__actions">
+              <p-button
+                label="Cancel"
+                severity="secondary"
+                [outlined]="true"
+                (onClick)="cancel()"
+              />
+              <p-button
+                label="Back"
+                icon="pi pi-arrow-left"
+                severity="secondary"
+                (onClick)="goBack(activateCallback)"
+              />
+              <p-button
+                label="Next"
+                icon="pi pi-arrow-right"
+                iconPos="right"
+                (onClick)="goNext(activateCallback)"
+              />
+            </div>
+          </div>
+        </ng-template>
+      </p-step-panel>
+
+      <p-step-panel [value]="5">
+        <ng-template #content let-activateCallback="activateCallback">
+          <div class="form-dialog__panel">
+            <app-blog-metadata-step [metadata]="metadata()" />
+            <div class="form-dialog__actions">
+              <p-button
+                label="Cancel"
+                severity="secondary"
+                [outlined]="true"
+                (onClick)="cancel()"
+              />
+              <p-button
+                label="Back"
+                icon="pi pi-arrow-left"
+                severity="secondary"
+                (onClick)="goBack(activateCallback)"
+              />
+              <p-button
+                [label]="isEditMode() ? 'Update' : 'Create'"
+                icon="pi pi-check"
+                [loading]="submitting()"
+                (onClick)="submit()"
+              />
+            </div>
+          </div>
+        </ng-template>
+      </p-step-panel>
+    </p-step-panels>
+  </p-stepper>
+</p-dialog>

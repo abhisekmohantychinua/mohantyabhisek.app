@@ -1,0 +1,36 @@
+<section class="topics-step">
+  <div class="topics-step__input-row">
+    <p-floatlabel variant="on" class="topics-step__input">
+      <input
+        pInputText
+        id="topic"
+        [formControl]="topicControl"
+        fluid
+        autocomplete="off"
+        (keydown)="onKeydown($event)"
+      />
+      <label for="topic">Add a topic</label>
+    </p-floatlabel>
+    <p-button
+      icon="pi pi-plus"
+      label="Add"
+      [disabled]="!topicControl.value.trim()"
+      (onClick)="addTopic()"
+    />
+  </div>
+
+  @if (duplicate()) {
+    <small class="topics-step__error">This topic already exists.</small>
+  }
+  @if (!isValid()) {
+    <small class="topics-step__error">At least one topic is required.</small>
+  }
+
+  <div class="topics-step__list">
+    @for (topic of topics(); track topic; let i = $index) {
+      <p-chip [label]="topic" [removable]="true" (onRemove)="removeTopic(i)" />
+    } @empty {
+      <span class="topics-step__empty">No topics added yet.</span>
+    }
+  </div>
+</section>

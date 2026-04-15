@@ -4,3 +4,34 @@
 @import 'tailwindcss-primeui';
 @import 'primeicons/primeicons.css';
 @custom-variant dark (&:where(.app-dark, .app-dark *));
+
+:root {
+  /* Content Viewer Color Palette - Picked from https://mohantyabhisek.com */
+  --content-viewer-background: #f7f9fc; /* Background */
+  --content-viewer-foreground: #2b2b2b; /* Charcoal */
+  --content-viewer-primary: #1f3a5f; /* Deep Blue */
+  --content-viewer-primary-foreground: #ffffff;
+  --content-viewer-secondary: #3a7d7c; /* Muted Teal */
+  --content-viewer-secondary-foreground: #ffffff;
+  --content-viewer-muted: #f1f3f7;
+  --content-viewer-muted-foreground: #6b7280;
+  --content-viewer-accent: #c89b3c; /* Soft Gold */
+  --content-viewer-accent-foreground: #ffffff;
+  --content-viewer-destructive: #ef4444;
+  --content-viewer-border: #e5e7eb;
+}
+
+@theme inline {
+  --color-content-viewer-background: var(--content-viewer-background);
+  --color-content-viewer-foreground: var(--content-viewer-foreground);
+  --color-content-viewer-primary: var(--content-viewer-primary);
+  --color-content-viewer-primary-foreground: var(--content-viewer-primary-foreground);
+  --color-content-viewer-secondary: var(--content-viewer-secondary);
+  --color-content-viewer-secondary-foreground: var(--content-viewer-secondary-foreground);
+  --color-content-viewer-muted: var(--content-viewer-muted);
+  --color-content-viewer-muted-foreground: var(--content-viewer-muted-foreground);
+  --color-content-viewer-accent: var(--content-viewer-accent);
+  --color-content-viewer-accent-foreground: var(--content-viewer-accent-foreground);
+  --color-content-viewer-destructive: var(--content-viewer-destructive);
+  --color-content-viewer-border: var(--content-viewer-border);
+}

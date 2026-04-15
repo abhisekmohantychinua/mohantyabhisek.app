@@ -9,14 +9,17 @@ describe('ThemeToggle', () => {
   let doc: Document;
 
   beforeEach(async () => {
+    localStorage.removeItem('app-dark-mode');
+
     await TestBed.configureTestingModule({
       imports: [ThemeToggle],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ThemeToggle);
-    component = fixture.componentInstance;
     doc = TestBed.inject(DOCUMENT);
     doc.documentElement.classList.remove('app-dark');
+
+    fixture = TestBed.createComponent(ThemeToggle);
+    component = fixture.componentInstance;
     await fixture.whenStable();
   });
 

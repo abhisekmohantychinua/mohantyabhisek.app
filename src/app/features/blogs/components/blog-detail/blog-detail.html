@@ -1,0 +1,110 @@
+@if (loading()) {
+  <div class="blog-detail__spinner">
+    <p-progressspinner ariaLabel="Loading blog" />
+  </div>
+} @else if (blog(); as blog) {
+  <article class="blog-detail">
+    <header class="blog-detail__header">
+      <div class="blog-detail__info">
+        <p-tag class="blog-detail__status" [value]="blog.status" [severity]="statusSeverity()" />
+        <h1 class="blog-detail__title">{{ blog.title }}</h1>
+        <p class="blog-detail__description">{{ blog.description }}</p>
+        <div class="blog-detail__dates">
+          @if (blog.postedAt) {
+            <span class="blog-detail__date">
+              <i class="pi pi-calendar"></i>
+              Posted: {{ blog.postedAt | date: 'MMM d, y h:mm a' }}
+            </span>
+          }
+          <span class="blog-detail__date">
+            <i class="pi pi-clock"></i>
+            Modified: {{ blog.lastModifiedAt | date: 'MMM d, y h:mm a' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="blog-detail__actions">
+        <p-button
+          label="View Blog"
+          icon="pi pi-external-link"
+          severity="info"
+          [outlined]="true"
+          (onClick)="openExternal()"
+        />
+
+        @if (isPublished()) {
+          <p-button
+            label="Unpublish"
+            icon="pi pi-eye-slash"
+            severity="warn"
+            [outlined]="true"
+            (onClick)="confirmUnpublish()"
+          />
+        } @else {
+          <p-button
+            label="Publish"
+            icon="pi pi-send"
+            severity="success"
+            [outlined]="true"
+            (onClick)="confirmPublish()"
+          />
+        }
+
+        <p-button
+          label="Delete"
+          icon="pi pi-trash"
+          severity="danger"
+          [outlined]="true"
+          (onClick)="confirmDelete()"
+        />
+      </div>
+    </header>
+
+    <section class="blog-detail__section">
+      <h2 class="blog-detail__section-title">Topics</h2>
+      <div class="blog-detail__topics">
+        @for (topic of blog.topics; track topic) {
+          <p-chip [label]="topic" />
+        }
+      </div>
+    </section>
+
+    <section class="blog-detail__section">
+      <h2 class="blog-detail__section-title">FAQs</h2>
+      <p-accordion [multiple]="true">
+        @for (faq of blog.faqs; track $index) {
+          <p-accordion-panel [value]="$index">
+            <p-accordion-header>{{ faq.question }}</p-accordion-header>
+            <p-accordion-content>
+              <p class="blog-detail__faq-answer">{{ faq.answer }}</p>
+            </p-accordion-content>
+          </p-accordion-panel>
+        }
+      </p-accordion>
+    </section>
+
+    <section class="blog-detail__section">
+      <h2 class="blog-detail__section-title">Content</h2>
+      <app-content-viewer [content]="blog.content" />
+    </section>
+
+    <p-button
+      class="blog-detail__fab"
+      icon="pi pi-pencil"
+      [rounded]="true"
+      [raised]="true"
+      (onClick)="openEditDialog()"
+      aria-label="Edit blog"
+    />
+
+    <p-confirmdialog />
+
+    <app-blog-form-dialog
+      [(visible)]="editDialogVisible"
+      [blog]="blog"
+      [metadata]="metadata()"
+      [submitHandler]="editHandler"
+      (saved)="onSaved()"
+    />
+  </article>
+}

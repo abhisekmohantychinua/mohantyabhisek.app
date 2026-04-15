@@ -1,0 +1,32 @@
+@reference "../../../../../styles.css";
+
+.content-step {
+  @apply flex gap-4;
+  height: 60vh;
+}
+
+.content-step__editor {
+  @apply flex flex-1 flex-col;
+}
+
+.content-step__preview {
+  @apply flex flex-1 flex-col;
+}
+
+.content-step__heading {
+  @apply m-0 mb-2 text-sm font-semibold
+    text-surface-600 dark:text-surface-300;
+}
+
+.content-step__monaco {
+  @apply flex-1 overflow-hidden rounded-lg border
+    border-surface-200 dark:border-surface-700;
+}
+
+.content-step__preview-content {
+  @apply flex-1 overflow-y-auto;
+}
+
+.content-step__error {
+  @apply mt-2 text-xs text-red-500;
+}

@@ -1,0 +1,65 @@
+<section class="metadata-step" [formGroup]="form">
+  <p class="metadata-step__info">
+    SEO metadata is optional. When provided, values must meet the character limits below.
+  </p>
+
+  <p-floatlabel variant="on">
+    <input
+      pInputText
+      id="metaTitle"
+      formControlName="metaTitle"
+      fluid
+      maxlength="60"
+      autocomplete="off"
+    />
+    <label for="metaTitle">Meta Title</label>
+  </p-floatlabel>
+  <small class="metadata-step__hint">
+    {{ form.controls.metaTitle.value.length }} / 60
+    <span class="metadata-step__hint-range">(min 40)</span>
+  </small>
+  @if (
+    form.controls.metaTitle.touched &&
+    form.controls.metaTitle.value &&
+    form.controls.metaTitle.errors
+  ) {
+    <small class="metadata-step__error">
+      @if (form.controls.metaTitle.errors['minlength']) {
+        Meta title must be at least 40 characters.
+      } @else if (form.controls.metaTitle.errors['maxlength']) {
+        Meta title must be at most 60 characters.
+      }
+    </small>
+  }
+
+  <p-floatlabel variant="on">
+    <textarea
+      pTextarea
+      id="metaDescription"
+      formControlName="metaDescription"
+      fluid
+      [autoResize]="true"
+      rows="3"
+      maxlength="155"
+    >
+    </textarea>
+    <label for="metaDescription">Meta Description</label>
+  </p-floatlabel>
+  <small class="metadata-step__hint">
+    {{ form.controls.metaDescription.value.length }} / 155
+    <span class="metadata-step__hint-range">(min 120)</span>
+  </small>
+  @if (
+    form.controls.metaDescription.touched &&
+    form.controls.metaDescription.value &&
+    form.controls.metaDescription.errors
+  ) {
+    <small class="metadata-step__error">
+      @if (form.controls.metaDescription.errors['minlength']) {
+        Meta description must be at least 120 characters.
+      } @else if (form.controls.metaDescription.errors['maxlength']) {
+        Meta description must be at most 155 characters.
+      }
+    </small>
+  }
+</section>

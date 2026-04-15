@@ -1,0 +1,10 @@
+@reference "../../../../../styles.css";
+
+.form-dialog__panel {
+  @apply flex flex-col gap-6 pt-4;
+}
+
+.form-dialog__actions {
+  @apply flex justify-end gap-2 border-t pt-4
+    border-surface-200 dark:border-surface-700;
+}

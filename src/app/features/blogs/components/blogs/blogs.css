@@ -1,7 +1,7 @@
 @reference "../../../../../styles.css";
 
 .blogs {
-  @apply flex flex-col gap-6;
+  @apply relative flex flex-col gap-6;
 }
 
 .blogs__title {
@@ -11,4 +11,8 @@
 
 .blogs__spinner {
   @apply flex items-center justify-center py-16;
+}
+
+.blogs__fab {
+  @apply fixed right-8 bottom-8;
 }

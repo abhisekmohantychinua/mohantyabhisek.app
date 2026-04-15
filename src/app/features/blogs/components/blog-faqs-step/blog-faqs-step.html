@@ -1,0 +1,101 @@
+<section class="faqs-step">
+  <div class="faqs-step__form" [formGroup]="faqForm">
+    <p-floatlabel variant="on">
+      <input
+        pInputText
+        id="question"
+        formControlName="question"
+        fluid
+        maxlength="200"
+        autocomplete="off"
+      />
+      <label for="question">Question</label>
+    </p-floatlabel>
+    <small class="faqs-step__hint"> {{ faqForm.controls.question.value.length }} / 200 </small>
+    @if (faqForm.controls.question.touched && faqForm.controls.question.errors) {
+      <small class="faqs-step__error">
+        @if (faqForm.controls.question.errors['required']) {
+          Question is required.
+        } @else if (faqForm.controls.question.errors['maxlength']) {
+          Question must be at most 200 characters.
+        }
+      </small>
+    }
+
+    <p-floatlabel variant="on">
+      <textarea
+        pTextarea
+        id="answer"
+        formControlName="answer"
+        fluid
+        [autoResize]="true"
+        rows="3"
+        maxlength="500"
+      ></textarea>
+      <label for="answer">Answer</label>
+    </p-floatlabel>
+    <small class="faqs-step__hint"> {{ faqForm.controls.answer.value.length }} / 500 </small>
+    @if (faqForm.controls.answer.touched && faqForm.controls.answer.errors) {
+      <small class="faqs-step__error">
+        @if (faqForm.controls.answer.errors['required']) {
+          Answer is required.
+        } @else if (faqForm.controls.answer.errors['maxlength']) {
+          Answer must be at most 500 characters.
+        }
+      </small>
+    }
+
+    <div class="faqs-step__form-actions">
+      @if (isEditing()) {
+        <p-button label="Save" icon="pi pi-check" (onClick)="saveEdit()" />
+        <p-button
+          label="Cancel"
+          icon="pi pi-times"
+          severity="secondary"
+          [outlined]="true"
+          (onClick)="cancelEdit()"
+        />
+      } @else {
+        <p-button label="Add FAQ" icon="pi pi-plus" (onClick)="addFaq()" />
+      }
+    </div>
+  </div>
+
+  @if (!isValid()) {
+    <small class="faqs-step__error">At least one FAQ is required.</small>
+  }
+
+  <div class="faqs-step__list">
+    @for (faq of faqs(); track $index; let i = $index) {
+      <div class="faqs-step__item">
+        <div class="faqs-step__item-content">
+          <strong class="faqs-step__item-question">{{ faq.question }}</strong>
+          <p class="faqs-step__item-answer">{{ faq.answer }}</p>
+        </div>
+        <div class="faqs-step__item-actions">
+          <p-button
+            icon="pi pi-pencil"
+            [rounded]="true"
+            [text]="true"
+            severity="secondary"
+            (onClick)="editFaq(i)"
+            aria-label="Edit FAQ"
+          />
+          <p-button
+            icon="pi pi-trash"
+            [rounded]="true"
+            [text]="true"
+            severity="danger"
+            (onClick)="removeFaq(i)"
+            aria-label="Remove FAQ"
+          />
+        </div>
+      </div>
+      @if (!$last) {
+        <p-divider />
+      }
+    } @empty {
+      <span class="faqs-step__empty">No FAQs added yet.</span>
+    }
+  </div>
+</section>

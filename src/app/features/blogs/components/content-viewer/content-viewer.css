@@ -1,0 +1,126 @@
+@reference "../../../../../styles.css";
+
+.content-viewer {
+  @apply rounded-lg border p-4
+    border-surface-200 dark:border-surface-700 bg-content-viewer-background text-content-viewer-foreground;
+}
+
+/* Headings */
+.content-viewer > h1 {
+  @apply text-3xl leading-snug mb-4 text-content-viewer-primary font-sans font-semibold mx-auto px-4;
+  @apply sm:text-4xl sm:leading-tight sm:mb-6;
+  @apply md:text-5xl md:max-w-3xl md:px-0;
+  @apply lg:text-5xl lg:max-w-full lg:px-4;
+  @apply xl:max-w-5xl xl:px-0;
+  @apply 2xl:text-5xl 2xl:mb-6; /* smaller relative to previous 2xl 6xl */
+}
+
+.content-viewer h2 {
+  @apply max-w-5xl mx-auto mt-10 mb-4 text-2xl font-semibold text-content-viewer-primary leading-snug;
+  @apply sm:text-2xl;
+  @apply md:text-3xl;
+}
+
+.content-viewer h3 {
+  @apply max-w-5xl mx-auto mt-8 mb-3 text-xl font-semibold text-content-viewer-primary;
+  @apply sm:text-xl;
+  @apply md:text-2xl;
+}
+
+.content-viewer h4 {
+  @apply max-w-5xl mx-auto mt-6 mb-2 text-lg font-semibold text-content-viewer-primary;
+  @apply sm:text-lg;
+}
+
+/* Sections */
+.content-viewer section {
+  @apply container mx-auto px-4;
+}
+
+/* Paragraphs */
+.content-viewer p {
+  @apply max-w-5xl mx-auto mb-6 text-base leading-relaxed text-content-viewer-muted-foreground;
+  @apply sm:text-lg sm:leading-8;
+}
+
+/* Links */
+.content-viewer a {
+  @apply text-content-viewer-primary underline underline-offset-4 transition-colors;
+}
+
+.content-viewer a:hover {
+  @apply text-content-viewer-primary/80;
+}
+
+/* Lists */
+.content-viewer ul,
+.content-viewer ol {
+  @apply max-w-5xl mx-auto mb-6 pl-6 text-content-viewer-muted-foreground;
+}
+
+.content-viewer ul {
+  @apply list-disc;
+}
+
+.content-viewer ol {
+  @apply list-decimal;
+}
+
+.content-viewer li {
+  @apply mb-2 leading-relaxed;
+}
+
+/* Blockquotes */
+.content-viewer blockquote {
+  @apply max-w-5xl mx-auto my-8 border-l-4 border-content-viewer-primary pl-6 italic text-content-viewer-muted-foreground;
+}
+
+/* Code blocks */
+.content-viewer pre {
+  @apply max-w-5xl mx-auto my-8 overflow-x-auto rounded-lg bg-content-viewer-muted p-4 text-sm;
+}
+
+.content-viewer code {
+  @apply rounded bg-content-viewer-muted px-1.5 py-0.5 font-mono text-sm;
+}
+
+/* Images */
+.content-viewer img {
+  @apply max-w-5xl mx-auto my-8 rounded-lg;
+}
+
+/* Horizontal rule */
+.content-viewer hr {
+  @apply max-w-5xl mx-auto my-12 border-content-viewer-primary;
+}
+
+/* Tables */
+.content-viewer table {
+  @apply max-w-5xl mx-auto my-8 w-full border-collapse;
+}
+
+.content-viewer th,
+.content-viewer td {
+  @apply border border-content-viewer-primary px-4 py-2 text-left;
+}
+
+.content-viewer th {
+  @apply bg-content-viewer-muted font-semibold;
+}
+
+.content-viewer caption {
+  @apply text-left mb-4 font-semibold text-content-viewer-primary;
+}
+
+/* Definition lists */
+.content-viewer dl {
+  @apply max-w-5xl mx-auto my-8;
+}
+
+.content-viewer dt {
+  @apply mt-6 font-semibold text-content-viewer-primary;
+}
+
+.content-viewer dd {
+  @apply mt-2 mb-4 pl-4 text-content-viewer-muted-foreground leading-relaxed;
+}

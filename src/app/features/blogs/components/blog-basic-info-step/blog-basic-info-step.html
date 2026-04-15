@@ -1,0 +1,55 @@
+<section class="basic-info-step" [formGroup]="form">
+  @if (showSlug()) {
+    <p-floatlabel variant="on">
+      <input pInputText id="slug" formControlName="slug" fluid maxlength="200" autocomplete="off" />
+      <label for="slug">Slug</label>
+    </p-floatlabel>
+    @if (form.controls.slug.touched && form.controls.slug.errors) {
+      <small class="basic-info-step__error">
+        @if (form.controls.slug.errors['required']) {
+          Slug is required.
+        } @else if (form.controls.slug.errors['maxlength']) {
+          Slug must be at most 200 characters.
+        }
+      </small>
+    }
+  }
+
+  <p-floatlabel variant="on">
+    <input pInputText id="title" formControlName="title" fluid maxlength="200" autocomplete="off" />
+    <label for="title">Title</label>
+  </p-floatlabel>
+  <small class="basic-info-step__hint"> {{ form.controls.title.value.length }} / 200 </small>
+  @if (form.controls.title.touched && form.controls.title.errors) {
+    <small class="basic-info-step__error">
+      @if (form.controls.title.errors['required']) {
+        Title is required.
+      } @else if (form.controls.title.errors['maxlength']) {
+        Title must be at most 200 characters.
+      }
+    </small>
+  }
+
+  <p-floatlabel variant="on">
+    <textarea
+      pTextarea
+      id="description"
+      formControlName="description"
+      fluid
+      [autoResize]="true"
+      rows="4"
+      maxlength="500"
+    ></textarea>
+    <label for="description">Description</label>
+  </p-floatlabel>
+  <small class="basic-info-step__hint"> {{ form.controls.description.value.length }} / 500 </small>
+  @if (form.controls.description.touched && form.controls.description.errors) {
+    <small class="basic-info-step__error">
+      @if (form.controls.description.errors['required']) {
+        Description is required.
+      } @else if (form.controls.description.errors['maxlength']) {
+        Description must be at most 500 characters.
+      }
+    </small>
+  }
+</section>

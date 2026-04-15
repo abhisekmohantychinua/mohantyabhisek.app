@@ -1,7 +1,8 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import type { ApplicationConfig } from '@angular/core';
-import { provideBrowserGlobalErrorListeners } from '@angular/core';
+import { importProvidersFrom, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
+import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 import { MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 
@@ -19,6 +20,7 @@ export const appConfig: ApplicationConfig = {
       withInterceptors([authenticationInterceptor, apiVersionInterceptor, apiErrorInterceptor]),
     ),
     MessageService,
+    importProvidersFrom(MonacoEditorModule.forRoot()),
     providePrimeNG({
       theme: {
         preset: appPreset,

@@ -1,0 +1,17 @@
+<section class="content-step">
+  <div class="content-step__editor">
+    <h3 class="content-step__heading">Editor</h3>
+    <ngx-monaco-editor
+      class="content-step__monaco"
+      [options]="editorOptions()"
+      [(ngModel)]="content"
+    />
+  </div>
+  <div class="content-step__preview">
+    <h3 class="content-step__heading">Preview</h3>
+    <app-content-viewer class="content-step__preview-content" [content]="content()" />
+  </div>
+</section>
+@if (!isValid()) {
+  <small class="content-step__error">Content is required.</small>
+}

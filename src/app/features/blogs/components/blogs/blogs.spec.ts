@@ -2,6 +2,8 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { NGX_MONACO_EDITOR_CONFIG } from 'ngx-monaco-editor-v2';
+import { MessageService } from 'primeng/api';
 
 import { BASE_URL } from '../../../../configs/app-config';
 import type { Blog } from '../../models/blog';
@@ -30,7 +32,13 @@ describe('Blogs', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [Blogs],
-      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideRouter([]),
+        MessageService,
+        { provide: NGX_MONACO_EDITOR_CONFIG, useValue: {} },
+      ],
     }).compileComponents();
 
     httpTesting = TestBed.inject(HttpTestingController);
