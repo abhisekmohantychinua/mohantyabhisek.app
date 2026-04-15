@@ -1,0 +1,1469 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "API mohantyabhisek.com",
+    "description": "API documentation for mohantyabhisek.com",
+    "contact": {
+      "name": "Abhisek Mohanty",
+      "url": "https://mohantyabhisek.com",
+      "email": "mohantyabhisek@hotmail.com"
+    },
+    "version": "1"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/api/blogs": {
+      "get": {
+        "tags": ["blog-controller"],
+        "summary": "List blogs",
+        "description": "Returns blogs whose slug contains the optional query value (case-insensitive).\nWhen query is omitted, all slugs are matched.\nIf status is provided, only blogs in that status are returned; otherwise all statuses are included.\nResults are sorted by lastModifiedAt in descending order, then mapped to API response objects.\n",
+        "operationId": "getAllBlogs",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "Substring to match against blog slugs",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "spring-boot"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter by blog status",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["PUBLISHED", "UNPUBLISHED"]
+            },
+            "example": "PUBLISHED"
+          },
+          {
+            "name": "X-API-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "1.0.0",
+              "enum": ["1"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Blogs retrieved",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BlogResponse"
+                  }
+                },
+                "examples": {
+                  "blogList": {
+                    "description": "blogList",
+                    "value": [
+                      {
+                        "slug": "my-first-blog",
+                        "title": "My First Blog",
+                        "description": "Short description for the blog",
+                        "status": "PUBLISHED",
+                        "postedAt": "2026-04-08T12:00:00.000+00:00",
+                        "lastModifiedAt": "2026-04-08T12:00:00.000+00:00",
+                        "topics": ["spring", "api"],
+                        "faqs": [
+                          {
+                            "question": "What is this?",
+                            "answer": "A demo blog."
+                          }
+                        ],
+                        "content": "## Hello world"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "validationError": {
+                    "description": "validationError",
+                    "value": {
+                      "message": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "description": "unauthorized",
+                    "value": {
+                      "message": "Invalid username or password provided"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "notFound": {
+                    "description": "notFound",
+                    "value": {
+                      "message": "Slug not found!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "conflict": {
+                    "description": "conflict",
+                    "value": {
+                      "message": "Slug already exists in the database"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["blog-controller"],
+        "summary": "Create blog",
+        "description": "Creates a new blog document with schemaVersion=1, stores title/description/content/topics/FAQs from the request,\nsets status to UNPUBLISHED, and initializes lastModifiedAt with the current timestamp.\nAfter a successful save, a matching metadata record is also created for the same slug.\nIf the slug already exists, the operation fails with conflict. If MongoDB schema validation fails, the operation fails with bad request.\n",
+        "operationId": "createBlog",
+        "parameters": [
+          {
+            "name": "X-API-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "1.0.0",
+              "enum": ["1"]
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Blog payload to create",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BlogRequest"
+              },
+              "examples": {
+                "createBlog": {
+                  "description": "createBlog",
+                  "value": {
+                    "slug": "my-first-blog",
+                    "title": "My First Blog",
+                    "description": "Short description for the blog",
+                    "topics": ["spring", "api"],
+                    "faqs": [
+                      {
+                        "question": "What is this?",
+                        "answer": "A demo blog."
+                      }
+                    ],
+                    "content": "## Hello world"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Blog created"
+          },
+          "400": {
+            "description": "Validation failed",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "validationError": {
+                    "description": "validationError",
+                    "value": {
+                      "message": "Slug is a required field!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "description": "unauthorized",
+                    "value": {
+                      "message": "Invalid username or password provided"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "notFound": {
+                    "description": "notFound",
+                    "value": {
+                      "message": "Slug not found!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Slug already exists",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "conflict": {
+                    "description": "conflict",
+                    "value": {
+                      "message": "Slug already exists in the database"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": ["auth-controller"],
+        "summary": "Login",
+        "description": "Authenticates credentials by loading the user by username and verifying the submitted password against the stored encoded password.\nIf username is unknown or password does not match, the operation fails with unauthorized.\nOn success, a new token is issued for the username and returned to the client.\n",
+        "operationId": "login",
+        "parameters": [
+          {
+            "name": "X-API-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "1.0.0",
+              "enum": ["1"]
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Login credentials",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthRequest"
+              },
+              "examples": {
+                "authRequest": {
+                  "description": "authRequest",
+                  "value": {
+                    "username": "demoUser",
+                    "password": "demoPass123"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                },
+                "examples": {
+                  "authResponse": {
+                    "description": "authResponse",
+                    "value": {
+                      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "validationError": {
+                    "description": "validationError",
+                    "value": {
+                      "message": "Empty username is not supported!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "description": "unauthorized",
+                    "value": {
+                      "message": "Invalid username or password provided"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "notFound": {
+                    "description": "notFound",
+                    "value": {
+                      "message": "Slug not found!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "conflict": {
+                    "description": "conflict",
+                    "value": {
+                      "message": "Slug already exists in the database"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/blogs/{slug}": {
+      "get": {
+        "tags": ["blog-controller"],
+        "summary": "Get blog",
+        "description": "Loads one blog by exact slug and returns it as a response DTO.\nIf no blog exists for the provided slug, the operation fails with not found.\n",
+        "operationId": "getBlog",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "description": "Blog slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "my-first-blog"
+          },
+          {
+            "name": "X-API-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "1.0.0",
+              "enum": ["1"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Blog retrieved",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlogResponse"
+                },
+                "examples": {
+                  "blog": {
+                    "description": "blog",
+                    "value": {
+                      "slug": "my-first-blog",
+                      "title": "My First Blog",
+                      "description": "Short description for the blog",
+                      "status": "PUBLISHED",
+                      "postedAt": "2026-04-08T12:00:00.000+00:00",
+                      "lastModifiedAt": "2026-04-08T12:00:00.000+00:00",
+                      "topics": ["spring", "api"],
+                      "faqs": [
+                        {
+                          "question": "What is this?",
+                          "answer": "A demo blog."
+                        }
+                      ],
+                      "content": "## Hello world"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "validationError": {
+                    "description": "validationError",
+                    "value": {
+                      "message": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "description": "unauthorized",
+                    "value": {
+                      "message": "Invalid username or password provided"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Slug not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "notFound": {
+                    "description": "notFound",
+                    "value": {
+                      "message": "Slug not found!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "conflict": {
+                    "description": "conflict",
+                    "value": {
+                      "message": "Slug already exists in the database"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["blog-controller"],
+        "summary": "Delete blog",
+        "description": "Deletes the blog by slug.\nWhen blog deletion succeeds, associated metadata for the same slug is also deleted.\nIf no blog is deleted for the slug, the operation fails with not found.\n",
+        "operationId": "deleteBlog",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "description": "Blog slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "my-first-blog"
+          },
+          {
+            "name": "X-API-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "1.0.0",
+              "enum": ["1"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Blog deleted"
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "validationError": {
+                    "description": "validationError",
+                    "value": {
+                      "message": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "description": "unauthorized",
+                    "value": {
+                      "message": "Invalid username or password provided"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Slug not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "notFound": {
+                    "description": "notFound",
+                    "value": {
+                      "message": "Slug not found!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "conflict": {
+                    "description": "conflict",
+                    "value": {
+                      "message": "Slug already exists in the database"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["blog-controller"],
+        "summary": "Update blog",
+        "description": "Partially updates an existing blog by slug.\nOnly non-null and non-blank fields are applied (topics/FAQs are applied only when non-empty), and FAQs are remapped from request DTOs to entity objects.\nWhen at least one field changes, lastModifiedAt is refreshed and the blog is persisted.\nIf no effective fields are provided, this operation is a no-op and returns success without persisting.\nIf the slug is missing, it fails with not found; if schema validation fails on save, it fails with bad request.\n",
+        "operationId": "updateBlog",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "description": "Blog slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "my-first-blog"
+          },
+          {
+            "name": "X-API-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "1.0.0",
+              "enum": ["1"]
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Blog fields to update",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BlogUpdateRequest"
+              },
+              "examples": {
+                "updateBlog": {
+                  "description": "updateBlog",
+                  "value": {
+                    "title": "Updated title",
+                    "description": "Updated description",
+                    "topics": ["spring"],
+                    "faqs": [
+                      {
+                        "question": "Updated?",
+                        "answer": "Yes."
+                      }
+                    ],
+                    "content": "## Updated content"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Blog updated"
+          },
+          "400": {
+            "description": "Validation failed",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "validationError": {
+                    "description": "validationError",
+                    "value": {
+                      "message": "Description is a required field!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "description": "unauthorized",
+                    "value": {
+                      "message": "Invalid username or password provided"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Slug not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "notFound": {
+                    "description": "notFound",
+                    "value": {
+                      "message": "Slug not found!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "conflict": {
+                    "description": "conflict",
+                    "value": {
+                      "message": "Slug already exists in the database"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/blogs/{slug}/unpublish": {
+      "patch": {
+        "tags": ["blog-controller"],
+        "summary": "Unpublish blog",
+        "description": "Changes a blog status from PUBLISHED to UNPUBLISHED and saves the updated document.\nIf the slug is missing, it fails with not found. If the blog is already unpublished, it fails with conflict.\n",
+        "operationId": "unpublishBlog",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "description": "Blog slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "my-first-blog"
+          },
+          {
+            "name": "X-API-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "1.0.0",
+              "enum": ["1"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Blog unpublished"
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "validationError": {
+                    "description": "validationError",
+                    "value": {
+                      "message": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "description": "unauthorized",
+                    "value": {
+                      "message": "Invalid username or password provided"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Slug not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "notFound": {
+                    "description": "notFound",
+                    "value": {
+                      "message": "Slug not found!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Blog already unpublished",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "conflict": {
+                    "description": "conflict",
+                    "value": {
+                      "message": "Status is already unpublished!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/blogs/{slug}/publish": {
+      "patch": {
+        "tags": ["blog-controller"],
+        "summary": "Publish blog",
+        "description": "Changes a blog status from UNPUBLISHED to PUBLISHED.\nOn publish, both postedAt and lastModifiedAt are set to the current timestamp and the blog is saved.\nIf the slug is missing, it fails with not found. If the blog is already published, it fails with conflict.\n",
+        "operationId": "publishBlog",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "description": "Blog slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "my-first-blog"
+          },
+          {
+            "name": "X-API-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "1.0.0",
+              "enum": ["1"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Blog published"
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "validationError": {
+                    "description": "validationError",
+                    "value": {
+                      "message": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "description": "unauthorized",
+                    "value": {
+                      "message": "Invalid username or password provided"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Slug not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "notFound": {
+                    "description": "notFound",
+                    "value": {
+                      "message": "Slug not found!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Blog already published",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "conflict": {
+                    "description": "conflict",
+                    "value": {
+                      "message": "Status is already published!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/blogs/{slug}/metadata": {
+      "get": {
+        "tags": ["blog-metadata-controller"],
+        "summary": "Get blog metadata",
+        "description": "Loads metadata by exact blog slug and returns slug/title/description values from storage.\nIf metadata does not exist for the slug, the operation fails with not found.\n",
+        "operationId": "getMetadataBySlug",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "description": "Blog slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "my-first-blog"
+          },
+          {
+            "name": "X-API-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "1.0.0",
+              "enum": ["1"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Metadata retrieved",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlogMetadataResponse"
+                },
+                "examples": {
+                  "metadata": {
+                    "description": "metadata",
+                    "value": {
+                      "slug": "my-first-blog",
+                      "title": "SEO title for the blog",
+                      "description": "SEO description for the blog"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "validationError": {
+                    "description": "validationError",
+                    "value": {
+                      "message": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "description": "unauthorized",
+                    "value": {
+                      "message": "Invalid username or password provided"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Blog metadata not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "notFound": {
+                    "description": "notFound",
+                    "value": {
+                      "message": "Blog metadata not found!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "conflict": {
+                    "description": "conflict",
+                    "value": {
+                      "message": "Slug already exists in the database"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["blog-metadata-controller"],
+        "summary": "Update blog metadata",
+        "description": "Partially updates metadata for the given blog slug.\nOnly non-null and non-empty title/description values are applied; missing or empty values are ignored.\nThe current metadata record is then saved.\nIf metadata does not exist for the slug, the operation fails with not found.\n",
+        "operationId": "updateMetadata",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "description": "Blog slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "my-first-blog"
+          },
+          {
+            "name": "X-API-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "1.0.0",
+              "enum": ["1"]
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Blog metadata fields to update",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BlogMetadataRequest"
+              },
+              "examples": {
+                "updateMetadata": {
+                  "description": "updateMetadata",
+                  "value": {
+                    "title": "SEO title for the blog",
+                    "description": "SEO description for the blog"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Metadata updated"
+          },
+          "400": {
+            "description": "Validation failed",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "validationError": {
+                    "description": "validationError",
+                    "value": {
+                      "message": "Title must be between 40 and 60 characters"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "description": "unauthorized",
+                    "value": {
+                      "message": "Invalid username or password provided"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Blog metadata not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "notFound": {
+                    "description": "notFound",
+                    "value": {
+                      "message": "Blog metadata not found!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "conflict": {
+                    "description": "conflict",
+                    "value": {
+                      "message": "Slug already exists in the database"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ExceptionResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "BlogRequest": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 0
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 0
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 0
+          },
+          "topics": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1
+          },
+          "faqs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FaqRequest"
+            },
+            "minItems": 1
+          },
+          "content": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": ["content", "description", "faqs", "slug", "title", "topics"]
+      },
+      "FaqRequest": {
+        "type": "object",
+        "properties": {
+          "question": {
+            "type": "string",
+            "minLength": 1
+          },
+          "answer": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": ["answer", "question"]
+      },
+      "AuthRequest": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "maxLength": 20,
+            "minLength": 4
+          },
+          "password": {
+            "type": "string",
+            "maxLength": 20,
+            "minLength": 4
+          }
+        },
+        "required": ["password", "username"]
+      },
+      "AuthResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          }
+        }
+      },
+      "BlogUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 0
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 0
+          },
+          "topics": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "faqs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FaqRequest"
+            }
+          },
+          "content": {
+            "type": "string"
+          }
+        }
+      },
+      "BlogMetadataRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 60,
+            "minLength": 40
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 155,
+            "minLength": 120
+          }
+        }
+      },
+      "BlogResponse": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "postedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastModifiedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "topics": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "faqs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Faq"
+            }
+          },
+          "content": {
+            "type": "string"
+          }
+        }
+      },
+      "Faq": {
+        "type": "object",
+        "properties": {
+          "question": {
+            "type": "string"
+          },
+          "answer": {
+            "type": "string"
+          }
+        }
+      },
+      "BlogMetadataResponse": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "description": "JWT Bearer token authentication",
+        "in": "header",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
