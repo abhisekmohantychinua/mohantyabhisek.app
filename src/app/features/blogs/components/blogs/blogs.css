@@ -1,0 +1,14 @@
+@reference "../../../../../styles.css";
+
+.blogs {
+  @apply flex flex-col gap-6;
+}
+
+.blogs__title {
+  @apply m-0 text-2xl font-bold
+    text-surface-900 dark:text-surface-0;
+}
+
+.blogs__spinner {
+  @apply flex items-center justify-center py-16;
+}

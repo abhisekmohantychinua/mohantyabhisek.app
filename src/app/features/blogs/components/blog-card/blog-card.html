@@ -1,0 +1,47 @@
+<article
+  class="blog-card"
+  tabindex="0"
+  role="link"
+  [attr.aria-label]="'View blog: ' + blog().title"
+  (click)="navigate()"
+  (keydown.enter)="navigate()"
+>
+  <div class="blog-card__header">
+    <div class="blog-card__slug-group">
+      <span class="blog-card__slug">{{ blog().slug }}</span>
+      <p-button
+        icon="pi pi-copy"
+        [rounded]="true"
+        [text]="true"
+        severity="secondary"
+        size="small"
+        ariaLabel="Copy slug"
+        (onClick)="copySlug($event)"
+      />
+      <p-button
+        icon="pi pi-external-link"
+        [rounded]="true"
+        [text]="true"
+        severity="secondary"
+        size="small"
+        ariaLabel="Open in new tab"
+        (onClick)="openExternal($event)"
+      />
+    </div>
+    <p-tag [value]="blog().status" [severity]="statusSeverity()" [rounded]="true" />
+  </div>
+  <h3 class="blog-card__title">{{ blog().title }}</h3>
+  <p class="blog-card__description">{{ blog().description }}</p>
+  <div class="blog-card__footer">
+    @if (blog().postedAt) {
+      <div class="blog-card__date blog-card__date--posted">
+        <i class="pi pi-calendar"></i>
+        <span>{{ blog().postedAt | date: 'MMM d, y h:mm a' }}</span>
+      </div>
+    }
+    <div class="blog-card__date blog-card__date--modified">
+      <i class="pi pi-pencil"></i>
+      <span>{{ blog().lastModifiedAt | date: 'MMM d, y h:mm a' }}</span>
+    </div>
+  </div>
+</article>

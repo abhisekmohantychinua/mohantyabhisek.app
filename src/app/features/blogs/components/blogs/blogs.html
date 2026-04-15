@@ -1,2 +1,11 @@
-<h1>Blogs</h1>
-<p>Browse the latest posts.</p>
+<section class="blogs">
+  <h1 class="blogs__title">Blogs</h1>
+  <app-blogs-filter (queryChange)="onQueryChange($event)" (statusChange)="onStatusChange($event)" />
+  @if (loading()) {
+    <div class="blogs__spinner">
+      <p-progressspinner ariaLabel="Loading blogs" />
+    </div>
+  } @else {
+    <app-blog-grid [blogs]="blogs()" />
+  }
+</section>

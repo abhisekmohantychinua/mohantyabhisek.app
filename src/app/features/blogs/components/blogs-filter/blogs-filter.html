@@ -1,0 +1,14 @@
+<div class="blogs-filter" [formGroup]="filterForm">
+  <p-inputgroup>
+    <p-inputgroup-addon>
+      <i class="pi pi-search"></i>
+    </p-inputgroup-addon>
+    <input pInputText formControlName="query" placeholder="Search blogs..." />
+  </p-inputgroup>
+  <p-select
+    formControlName="status"
+    [options]="statusOptions"
+    optionLabel="label"
+    placeholder="Status"
+  />
+</div>

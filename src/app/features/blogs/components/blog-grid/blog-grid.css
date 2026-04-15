@@ -1,0 +1,12 @@
+@reference "../../../../../styles.css";
+
+.blog-grid {
+  @apply grid grid-cols-1 gap-6
+    md:grid-cols-2
+    lg:grid-cols-3;
+}
+
+.blog-grid__empty {
+  @apply col-span-full text-center py-12 text-lg
+    text-surface-500 dark:text-surface-400;
+}

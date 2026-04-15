@@ -26,7 +26,6 @@ import { ThemeToggle } from '../theme-toggle/theme-toggle';
     ToastModule,
     ThemeToggle,
   ],
-  providers: [MessageService],
   templateUrl: './login.html',
   styleUrl: './login.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

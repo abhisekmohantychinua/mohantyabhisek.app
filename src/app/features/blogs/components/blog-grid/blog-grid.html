@@ -1,0 +1,7 @@
+<div class="blog-grid">
+  @for (blog of blogs(); track blog.slug) {
+    <app-blog-card [blog]="blog" />
+  } @empty {
+    <p class="blog-grid__empty">No blogs found.</p>
+  }
+</div>
