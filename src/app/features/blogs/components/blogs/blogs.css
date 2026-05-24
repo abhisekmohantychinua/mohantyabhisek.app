@@ -16,3 +16,11 @@
 .blogs__fab {
   @apply fixed right-8 bottom-8;
 }
+
+.blogs__scroll-anchor {
+  height: 1px;
+}
+
+.blogs__loading-more {
+  @apply flex items-center justify-center py-8;
+}

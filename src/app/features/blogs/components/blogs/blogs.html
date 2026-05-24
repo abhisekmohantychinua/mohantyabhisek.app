@@ -1,12 +1,20 @@
 <section class="blogs">
   <h1 class="blogs__title">Blogs</h1>
+
   <app-blogs-filter (queryChange)="onQueryChange($event)" (statusChange)="onStatusChange($event)" />
-  @if (loading()) {
+
+  @if (initialLoading()) {
     <div class="blogs__spinner">
       <p-progressspinner ariaLabel="Loading blogs" />
     </div>
   } @else {
     <app-blog-grid [blogs]="blogs()" />
+  }
+  <div #scrollAnchor class="blogs__scroll-anchor"></div>
+  @if (loadingMore()) {
+    <div class="blogs__loading-more">
+      <p-progressspinner ariaLabel="Loading more blogs" />
+    </div>
   }
 
   <p-button

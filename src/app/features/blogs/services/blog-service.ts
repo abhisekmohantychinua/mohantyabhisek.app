@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import type { Observable } from 'rxjs';
 
 import { BASE_URL } from '../../../configs/app-config';
+import type PageResponse from '../../../models/page-response';
 import type { Blog } from '../models/blog';
 import type { BlogRequest } from '../models/blog-request';
 import type { BlogUpdateRequest } from '../models/blog-update-request';
@@ -15,21 +16,33 @@ export class BlogService {
   private readonly baseUrl = `${BASE_URL}/api/blogs`;
 
   /**
-   * Fetches a filtered and sorted list of blogs from the server.
+   * Fetches a paginated list of blogs from the server using
+   * index-based pagination.
    *
    * @param query - Optional case-insensitive substring matched against blog slugs.
    *   When omitted, all slugs are matched.
+   *
    * @param status - Optional blog status filter (`PUBLISHED` or `UNPUBLISHED`).
    *   When omitted, blogs of every status are included.
-   * @returns An observable emitting the matched blogs.
+   *
+   * @param index - Optional zero-based pagination index.
+   *   Each index represents a fixed-size result window.
+   *   Invalid or negative values automatically fallback to `0`.
+   *
+   * @returns An observable emitting a paginated blog response.
    *
    * @remarks
-   * **API behavior** (`GET /api/blogs`): Returns blogs whose slug contains the
-   * optional query value (case-insensitive). If status is provided, only blogs
-   * in that status are returned; otherwise all statuses are included. Results
-   * are sorted by `lastModifiedAt` in descending order.
+   * **API behavior** (`GET /api/blogs`)
+   *
+   * - Blogs are filtered using a case-insensitive slug match.
+   * - Results are sorted by `lastModifiedAt` in descending order.
+   * - Pagination uses fixed-size index-based windows.
+   * - The response includes:
+   *   - `items` → blogs for the requested index
+   *   - `currentIndex` → current pagination index
+   *   - `isLastIndex` → indicates whether more pages exist
    */
-  getAllBlogs(query?: string, status?: string): Observable<Blog[]> {
+  listBlogs(query?: string, status?: string, index?: number): Observable<PageResponse<Blog>> {
     let params = new HttpParams();
     if (query) {
       params = params.set('query', query);
@@ -37,7 +50,11 @@ export class BlogService {
     if (status) {
       params = params.set('status', status);
     }
-    return this.http.get<Blog[]>(this.baseUrl, { params });
+    if (!index || index < 0) {
+      index = 0; // Fallback to zero if index isn't provided or negative
+    }
+    params = params.set('index', index);
+    return this.http.get<PageResponse<Blog>>(this.baseUrl, { params });
   }
 
   /**
