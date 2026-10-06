@@ -31,15 +31,18 @@ export class ContentViewer {
     this.sanitizer.bypassSecurityTrustHtml(this.content()),
   );
 
-  private readonly resizeObserver = new ResizeObserver(() => {
-    this.wrapOverflowingTables();
-  });
+  private readonly resizeObserver =
+    typeof ResizeObserver !== 'undefined'
+      ? new ResizeObserver(() => {
+          this.wrapOverflowingTables();
+        })
+      : null;
 
   private initialized = false;
 
   constructor() {
     this.destroyRef.onDestroy(() => {
-      this.resizeObserver.disconnect();
+      this.resizeObserver?.disconnect();
     });
 
     afterEveryRender(() => {
@@ -50,7 +53,7 @@ export class ContentViewer {
   private initialize(): void {
     const element = this.viewer().nativeElement;
 
-    if (!this.initialized) {
+    if (!this.initialized && this.resizeObserver) {
       this.resizeObserver.observe(element);
       this.initialized = true;
     }

@@ -196,6 +196,10 @@ export class Blogs implements OnInit, OnDestroy {
   }
 
   protected setupIntersectionObserver(element: HTMLDivElement): void {
+    if (typeof IntersectionObserver === 'undefined') {
+      return;
+    }
+
     this.observer?.disconnect();
 
     this.observer = new IntersectionObserver((entries) => {
