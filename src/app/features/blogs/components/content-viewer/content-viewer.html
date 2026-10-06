@@ -1,1 +1,3 @@
-<div class="content-viewer" [innerHTML]="sanitizedContent()"></div>
+<div #contentViewer class="content-viewer">
+  <div class="content-viewer__content-wrapper" [innerHTML]="sanitizedContent()"></div>
+</div>
