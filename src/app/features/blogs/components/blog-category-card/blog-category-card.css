@@ -1,11 +1,15 @@
 @reference "../../../../../styles.css";
 
 .blog-category-card {
-  @apply flex flex-col gap-3 p-5 rounded-xl border
+  @apply flex flex-col gap-3 p-5 rounded-xl border cursor-pointer
     transition-all duration-200
     border-surface-200 dark:border-surface-700
     hover:border-primary dark:hover:border-primary
     hover:shadow-md;
+}
+
+.blog-category-card:focus-visible {
+  @apply outline-2 outline-offset-2 outline-primary;
 }
 
 .blog-category-card__header {

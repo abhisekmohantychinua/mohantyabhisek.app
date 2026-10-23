@@ -9,15 +9,11 @@
       <p-progressspinner ariaLabel="Loading blog categories" />
     </div>
   } @else {
-    <app-blog-category-grid
-      [categories]="categories()"
-      (editRequested)="editCategory($event)"
-    />
+    <app-blog-category-grid [categories]="categories()" />
   }
 
   <app-blog-category-form-dialog
     [(visible)]="formDialogVisible"
-    [category]="selectedCategory()"
     [submitHandler]="submitHandler"
     (saved)="onSaved()"
   />

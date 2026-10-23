@@ -30,18 +30,9 @@ export class BlogCategories implements OnInit, OnDestroy {
   readonly categories = signal<BlogCategory[]>([]);
   readonly loading = signal(true);
   readonly formDialogVisible = signal(false);
-  readonly selectedCategory = signal<BlogCategory | undefined>(undefined);
 
-  protected readonly submitHandler = (request: BlogCategoryRequest): Observable<void> => {
-    const category = this.selectedCategory();
-    if (category) {
-      return this.categoryService.updateCategory(category.slug, {
-        title: request.title,
-        description: request.description,
-      });
-    }
-    return this.categoryService.createCategory(request);
-  };
+  protected readonly submitHandler = (request: BlogCategoryRequest): Observable<void> =>
+    this.categoryService.createCategory(request);
 
   ngOnInit(): void {
     this.loadCategories();
@@ -52,17 +43,10 @@ export class BlogCategories implements OnInit, OnDestroy {
   }
 
   protected createCategory(): void {
-    this.selectedCategory.set(undefined);
-    this.formDialogVisible.set(true);
-  }
-
-  protected editCategory(category: BlogCategory): void {
-    this.selectedCategory.set(category);
     this.formDialogVisible.set(true);
   }
 
   protected onSaved(): void {
-    this.selectedCategory.set(undefined);
     this.loadCategories(false);
   }
 

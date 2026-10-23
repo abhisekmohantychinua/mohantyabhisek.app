@@ -1,9 +1,6 @@
 <div class="blog-category-grid">
   @for (category of categories(); track category.slug) {
-    <app-blog-category-card
-      [category]="category"
-      (editRequested)="editRequested.emit($event)"
-    />
+    <app-blog-category-card [category]="category" />
   } @empty {
     <p class="blog-category-grid__empty">No blog categories found.</p>
   }

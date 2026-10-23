@@ -1,4 +1,6 @@
+import { Clipboard } from '@angular/cdk/clipboard';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter, Router } from '@angular/router';
 
 import type { BlogCategory } from '../../models/blog-category';
 import { BlogCategoryCard } from './blog-category-card';
@@ -14,14 +16,17 @@ const mockCategory: BlogCategory = {
 describe('BlogCategoryCard', () => {
   let component: BlogCategoryCard;
   let fixture: ComponentFixture<BlogCategoryCard>;
+  let router: Router;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [BlogCategoryCard],
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(BlogCategoryCard);
     component = fixture.componentInstance;
+    router = TestBed.inject(Router);
     fixture.componentRef.setInput('category', mockCategory);
     fixture.detectChanges();
   });
@@ -50,11 +55,38 @@ describe('BlogCategoryCard', () => {
     expect(element.querySelectorAll('.blog-category-card__date').length).toBe(2);
   });
 
-  it('should emit the category when the edit action is activated', () => {
-    const editSpy = vi.spyOn(component.editRequested, 'emit');
+  it('should navigate to the category detail page when the card is activated', () => {
+    const navigateSpy = vi.spyOn(router, 'navigate');
 
-    component.editRequested.emit(mockCategory);
+    component['navigate']();
 
-    expect(editSpy).toHaveBeenCalledWith(mockCategory);
+    expect(navigateSpy).toHaveBeenCalledWith(['/blogs/categories', 'technology']);
+  });
+
+  it('should copy the category slug without bubbling the click', () => {
+    const clipboard = TestBed.inject(Clipboard);
+    const copySpy = vi.spyOn(clipboard, 'copy');
+    const event = new Event('click');
+    const stopSpy = vi.spyOn(event, 'stopPropagation');
+
+    component['copySlug'](event);
+
+    expect(copySpy).toHaveBeenCalledWith('technology');
+    expect(stopSpy).toHaveBeenCalledOnce();
+  });
+
+  it('should open the public category page in a new tab without bubbling the click', () => {
+    const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null);
+    const event = new Event('click');
+    const stopSpy = vi.spyOn(event, 'stopPropagation');
+
+    component['openExternal'](event);
+
+    expect(openSpy).toHaveBeenCalledWith(
+      'https://mohantyabhisek.com/blogs/categories/technology',
+      '_blank',
+      'noopener,noreferrer',
+    );
+    expect(stopSpy).toHaveBeenCalledOnce();
   });
 });

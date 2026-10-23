@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 import type { BlogCategory } from '../../models/blog-category';
 import { BlogCategoryCard } from '../blog-category-card/blog-category-card';
@@ -12,5 +12,4 @@ import { BlogCategoryCard } from '../blog-category-card/blog-category-card';
 })
 export class BlogCategoryGrid {
   readonly categories = input.required<BlogCategory[]>();
-  readonly editRequested = output<BlogCategory>();
 }

@@ -1,0 +1,59 @@
+@if (loading()) {
+  <div class="blog-category-detail__spinner">
+    <p-progressspinner ariaLabel="Loading blog category" />
+  </div>
+} @else if (category(); as category) {
+  <article class="blog-category-detail">
+    <header class="blog-category-detail__header">
+      <div class="blog-category-detail__info">
+        <h1 class="blog-category-detail__title">{{ category.title }}</h1>
+        <p class="blog-category-detail__description">{{ category.description }}</p>
+        <div class="blog-category-detail__dates">
+          <span class="blog-category-detail__date">
+            <i class="pi pi-calendar" aria-hidden="true"></i>
+            Created: {{ category.createdAt | date: 'MMM d, y h:mm a' }}
+          </span>
+          <span class="blog-category-detail__date">
+            <i class="pi pi-clock" aria-hidden="true"></i>
+            Modified: {{ category.lastModifiedAt | date: 'MMM d, y h:mm a' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="blog-category-detail__actions">
+        <p-button
+          label="View Category"
+          icon="pi pi-external-link"
+          severity="info"
+          [outlined]="true"
+          (onClick)="openExternal()"
+        />
+        <p-button
+          label="Delete"
+          icon="pi pi-trash"
+          severity="danger"
+          [outlined]="true"
+          (onClick)="confirmDelete()"
+        />
+      </div>
+    </header>
+
+    <p-button
+      class="blog-category-detail__fab"
+      icon="pi pi-pencil"
+      [rounded]="true"
+      [raised]="true"
+      (onClick)="openEditDialog()"
+      aria-label="Edit category"
+    />
+
+    <p-confirmdialog />
+
+    <app-blog-category-form-dialog
+      [(visible)]="editDialogVisible"
+      [category]="category"
+      [submitHandler]="editHandler"
+      (saved)="onSaved()"
+    />
+  </article>
+}

@@ -97,30 +97,4 @@ describe('BlogCategories', () => {
     createRequest.flush(null, { status: 201, statusText: 'Created' });
   });
 
-  it('should update the selected category from the form submission', () => {
-    fixture.detectChanges();
-    httpTesting.expectOne(categoriesUrl).flush([]);
-
-    const category: BlogCategory = {
-      slug: 'technology',
-      title: 'Technology',
-      description: 'Technology articles',
-      createdAt: '2026-01-01T00:00:00Z',
-      lastModifiedAt: '2026-01-02T00:00:00Z',
-    };
-    component['editCategory'](category);
-    component['submitHandler']({
-      slug: category.slug,
-      title: 'Technology and Science',
-      description: 'Updated category description',
-    }).subscribe();
-
-    const updateRequest = httpTesting.expectOne(`${categoriesUrl}/technology`);
-    expect(updateRequest.request.method).toBe('PATCH');
-    expect(updateRequest.request.body).toEqual({
-      title: 'Technology and Science',
-      description: 'Updated category description',
-    });
-    updateRequest.flush(null);
-  });
 });

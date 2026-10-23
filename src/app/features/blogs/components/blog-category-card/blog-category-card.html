@@ -1,16 +1,31 @@
-<article class="blog-category-card">
+<article
+  class="blog-category-card"
+  tabindex="0"
+  role="link"
+  [attr.aria-label]="'View blog category: ' + category().title"
+  (click)="navigate()"
+  (keydown.enter)="navigate()"
+>
   <header class="blog-category-card__header">
     <span class="blog-category-card__slug">{{ category().slug }}</span>
     <div class="blog-category-card__actions">
-      <i class="pi pi-folder blog-category-card__icon" aria-hidden="true"></i>
       <p-button
-        icon="pi pi-pencil"
+        icon="pi pi-copy"
         [rounded]="true"
         [text]="true"
         severity="secondary"
         size="small"
-        [ariaLabel]="'Edit category ' + category().title"
-        (onClick)="editRequested.emit(category())"
+        ariaLabel="Copy slug"
+        (onClick)="copySlug($event)"
+      />
+      <p-button
+        icon="pi pi-external-link"
+        [rounded]="true"
+        [text]="true"
+        severity="secondary"
+        size="small"
+        ariaLabel="Open category in new tab"
+        (onClick)="openExternal($event)"
       />
     </div>
   </header>
