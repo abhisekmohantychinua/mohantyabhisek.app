@@ -1,0 +1,34 @@
+<section class="category-step">
+  <label class="category-step__label" for="blog-category">Blog category</label>
+  <p-select
+    inputId="blog-category"
+    [options]="categories()"
+    optionLabel="title"
+    optionValue="slug"
+    placeholder="Select a category (optional)"
+    [formControl]="categorySlugControl"
+    [filter]="true"
+    filterBy="title,description"
+    [checkmark]="true"
+    [loading]="loading()"
+    [showClear]="false"
+    fluid
+  >
+    <ng-template #item let-category>
+      <div class="category-step__option">
+        <span class="category-step__option-title">{{ category.title }}</span>
+        <span class="category-step__option-description">{{ category.description }}</span>
+      </div>
+    </ng-template>
+  </p-select>
+
+  <small class="category-step__hint">
+    Category assignment is optional. Blogs without a category remain uncategorized.
+  </small>
+
+  @if (loadFailed()) {
+    <small class="category-step__error" role="alert">
+      Categories could not be loaded. You can continue without selecting one.
+    </small>
+  }
+</section>

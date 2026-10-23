@@ -19,6 +19,7 @@ import type { Blog } from '../../models/blog';
 import type { BlogFormData } from '../../models/blog-form-data';
 import type { BlogMetadata } from '../../models/blog-metadata';
 import { BlogBasicInfoStep } from '../blog-basic-info-step/blog-basic-info-step';
+import { BlogCategoryStep } from '../blog-category-step/blog-category-step';
 import { BlogContentStep } from '../blog-content-step/blog-content-step';
 import { BlogFaqsStep } from '../blog-faqs-step/blog-faqs-step';
 import { BlogMetadataStep } from '../blog-metadata-step/blog-metadata-step';
@@ -31,6 +32,7 @@ import { BlogTopicsStep } from '../blog-topics-step/blog-topics-step';
     StepperModule,
     ButtonModule,
     BlogBasicInfoStep,
+    BlogCategoryStep,
     BlogTopicsStep,
     BlogFaqsStep,
     BlogContentStep,
@@ -51,6 +53,7 @@ export class BlogFormDialog {
   readonly saved = output<void>();
 
   private readonly basicInfoStep = viewChild(BlogBasicInfoStep);
+  private readonly categoryStep = viewChild(BlogCategoryStep);
   private readonly topicsStep = viewChild(BlogTopicsStep);
   private readonly faqsStep = viewChild(BlogFaqsStep);
   private readonly contentStep = viewChild(BlogContentStep);
@@ -68,12 +71,14 @@ export class BlogFormDialog {
       case 1:
         return this.basicInfoStep()?.form.valid ?? false;
       case 2:
-        return this.topicsStep()?.isValid() ?? false;
+        return true;
       case 3:
-        return this.faqsStep()?.isValid() ?? false;
+        return this.topicsStep()?.isValid() ?? false;
       case 4:
-        return this.contentStep()?.isValid() ?? false;
+        return this.faqsStep()?.isValid() ?? false;
       case 5:
+        return this.contentStep()?.isValid() ?? false;
+      case 6:
         return this.metadataStep()?.isValid() ?? false;
       default:
         return false;
@@ -106,17 +111,19 @@ export class BlogFormDialog {
   }
 
   protected submit(): void {
-    if (!this.canProceedFromStep(5)) {
-      this.markCurrentStepTouched(5);
+    if (!this.canProceedFromStep(6)) {
+      this.markCurrentStepTouched(6);
       return;
     }
 
     const metaValue = this.metadataStep()!.getValue();
+    const blogCategorySlug = this.categoryStep()?.getValue();
     const data: BlogFormData = {
       ...this.basicInfoStep()!.getValue(),
       topics: this.topicsStep()!.getValue(),
       faqs: this.faqsStep()!.getValue(),
       content: this.contentStep()!.getValue(),
+      ...(blogCategorySlug ? { blogCategorySlug } : {}),
       metaTitle: metaValue.title ?? '',
       metaDescription: metaValue.description ?? '',
     };
@@ -143,7 +150,7 @@ export class BlogFormDialog {
     if (step === 1) {
       this.basicInfoStep()?.form.markAllAsTouched();
     }
-    if (step === 5) {
+    if (step === 6) {
       this.metadataStep()?.form.markAllAsTouched();
     }
   }

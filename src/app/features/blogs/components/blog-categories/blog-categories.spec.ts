@@ -70,6 +70,15 @@ describe('BlogCategories', () => {
     expect(component.loading()).toBe(false);
   });
 
+  it('should cancel the categories request when destroyed', () => {
+    fixture.detectChanges();
+    const req = httpTesting.expectOne(categoriesUrl);
+
+    fixture.destroy();
+
+    expect(req.cancelled).toBe(true);
+  });
+
   it('should create a category from the form submission', () => {
     fixture.detectChanges();
     httpTesting.expectOne(categoriesUrl).flush([]);

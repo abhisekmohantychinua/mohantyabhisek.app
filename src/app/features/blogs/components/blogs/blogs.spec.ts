@@ -4,10 +4,15 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { NGX_MONACO_EDITOR_CONFIG } from 'ngx-monaco-editor-v2';
 import { MessageService } from 'primeng/api';
+import type { Observable } from 'rxjs';
+import { of } from 'rxjs';
 
 import { BASE_URL } from '../../../../configs/app-config';
 import type PageResponse from '../../../../models/page-response';
 import type { Blog } from '../../models/blog';
+import type { BlogCategory } from '../../models/blog-category';
+import type { BlogFormData } from '../../models/blog-form-data';
+import { BlogCategoryService } from '../../services/blog-category-service';
 import { Blogs } from './blogs';
 
 describe('Blogs', () => {
@@ -73,6 +78,10 @@ describe('Blogs', () => {
         provideRouter([]),
         MessageService,
         { provide: NGX_MONACO_EDITOR_CONFIG, useValue: {} },
+        {
+          provide: BlogCategoryService,
+          useValue: { listCategories: (): Observable<BlogCategory[]> => of([]) },
+        },
       ],
     }).compileComponents();
 
@@ -108,6 +117,48 @@ describe('Blogs', () => {
       expect(component.initialLoading()).toBe(false);
       expect(component.currentIndex()).toBe(0);
       expect(component.isLastIndex()).toBe(false);
+    });
+
+    describe('createHandler', () => {
+      it('should include the selected category slug in the create payload', () => {
+        const data: BlogFormData = {
+          slug: 'blog-one',
+          title: 'Blog One',
+          description: 'Description',
+          topics: ['angular'],
+          faqs: [{ question: 'Q?', answer: 'A.' }],
+          content: 'Content',
+          blogCategorySlug: 'technology',
+          metaTitle: '',
+          metaDescription: '',
+        };
+
+        component['createHandler'](data).subscribe();
+
+        const req = httpTesting.expectOne(baseUrl);
+        expect(req.request.method).toBe('POST');
+        expect(req.request.body.blogCategorySlug).toBe('technology');
+        req.flush(null, { status: 201, statusText: 'Created' });
+      });
+
+      it('should omit the category slug when no category is selected', () => {
+        const data: BlogFormData = {
+          slug: 'blog-one',
+          title: 'Blog One',
+          description: 'Description',
+          topics: ['angular'],
+          faqs: [{ question: 'Q?', answer: 'A.' }],
+          content: 'Content',
+          metaTitle: '',
+          metaDescription: '',
+        };
+
+        component['createHandler'](data).subscribe();
+
+        const req = httpTesting.expectOne(baseUrl);
+        expect(req.request.body).not.toHaveProperty('blogCategorySlug');
+        req.flush(null, { status: 201, statusText: 'Created' });
+      });
     });
 
     it('should show spinner while initial loading', () => {

@@ -6,6 +6,7 @@ import {
   inject,
   input,
   model,
+  type OnDestroy,
   output,
   signal,
 } from '@angular/core';
@@ -16,7 +17,7 @@ import { DialogModule } from 'primeng/dialog';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
-import type { Observable } from 'rxjs';
+import type { Observable, Subscription } from 'rxjs';
 
 import type { BlogCategory } from '../../models/blog-category';
 import type { BlogCategoryRequest } from '../../models/blog-category-request';
@@ -35,9 +36,10 @@ import type { BlogCategoryRequest } from '../../models/blog-category-request';
   styleUrl: './blog-category-form-dialog.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BlogCategoryFormDialog {
+export class BlogCategoryFormDialog implements OnDestroy {
   private readonly formBuilder = inject(FormBuilder);
   private readonly messageService = inject(MessageService);
+  private submitSubscription?: Subscription;
 
   readonly category = input<BlogCategory>();
   readonly visible = model.required<boolean>();
@@ -82,6 +84,10 @@ export class BlogCategoryFormDialog {
     this.visible.set(false);
   }
 
+  ngOnDestroy(): void {
+    this.submitSubscription?.unsubscribe();
+  }
+
   protected submit(): void {
     if (this.form.invalid || this.submitting()) {
       this.form.markAllAsTouched();
@@ -89,22 +95,23 @@ export class BlogCategoryFormDialog {
     }
 
     this.submitting.set(true);
-    this.submitHandler()(this.form.getRawValue()).subscribe({
-      next: () => {
-        this.submitting.set(false);
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Success',
-          detail: this.isEditMode()
-            ? 'Blog category updated successfully.'
-            : 'Blog category created successfully.',
-        });
-        this.visible.set(false);
-        this.saved.emit();
-      },
-      error: () => {
-        this.submitting.set(false);
-      },
-    });
+    this.submitSubscription?.unsubscribe();
+    this.submitSubscription = this.submitHandler()(this.form.getRawValue()).subscribe({
+        next: () => {
+          this.submitting.set(false);
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: this.isEditMode()
+              ? 'Blog category updated successfully.'
+              : 'Blog category created successfully.',
+          });
+          this.visible.set(false);
+          this.saved.emit();
+        },
+        error: () => {
+          this.submitting.set(false);
+        },
+      });
   }
 }

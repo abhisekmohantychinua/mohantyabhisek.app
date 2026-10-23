@@ -137,6 +137,7 @@ describe('BlogService', () => {
         topics: ['angular'],
         faqs: [{ question: 'Q?', answer: 'A.' }],
         content: 'Content',
+        blogCategorySlug: 'technology',
       };
 
       service.createBlog(request).subscribe();
@@ -150,7 +151,10 @@ describe('BlogService', () => {
 
   describe('updateBlog', () => {
     it('should PATCH a blog by slug', () => {
-      const request: BlogUpdateRequest = { title: 'Updated' };
+      const request: BlogUpdateRequest = {
+        title: 'Updated',
+        blogCategorySlug: 'technology',
+      };
 
       service.updateBlog('my-blog', request).subscribe();
 

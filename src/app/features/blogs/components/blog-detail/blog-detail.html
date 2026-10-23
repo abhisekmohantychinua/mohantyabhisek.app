@@ -61,6 +61,9 @@
     </header>
 
     <app-blog-metadata-card [slug]="blog.slug" />
+    @if (blog.blogCategorySlug) {
+      <app-blog-category-details-card [slug]="blog.blogCategorySlug" />
+    }
 
     <section class="blog-detail__section">
       <h2 class="blog-detail__section-title">Topics</h2>

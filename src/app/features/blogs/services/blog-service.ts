@@ -76,14 +76,15 @@ export class BlogService {
    * Sends a request to create a new blog from the provided payload.
    *
    * @param request - The blog content including title, description, content,
-   *   topics, and FAQs.
+   *   topics, FAQs, and an optional category slug.
    * @returns An observable that completes when the blog is created.
    *
    * @remarks
    * **API behavior** (`POST /api/blogs`): Creates a new blog document with
    * `schemaVersion` 1, stores title/description/content/topics/FAQs from the
    * request, sets status to `UNPUBLISHED`, and initialises `lastModifiedAt`
-   * with the current timestamp. After a successful save, a matching metadata
+   * with the current timestamp. When `blogCategorySlug` is provided, the
+   * category must exist. After a successful save, a matching metadata
    * record is also created for the same slug.
    *
    * - Slug conflict → 409 Conflict.
@@ -104,7 +105,8 @@ export class BlogService {
    * @remarks
    * **API behavior** (`PATCH /api/blogs/{slug}`): Only non-null and non-blank
    * fields are applied. Topics and FAQs are applied only when non-empty; FAQs
-   * are remapped from request DTOs. When at least one field changes,
+   * are remapped from request DTOs. A provided `blogCategorySlug` assigns the
+   * blog to that category. When at least one field changes,
    * `lastModifiedAt` is refreshed to the current timestamp. If no effective
    * fields are provided the operation is a no-op and returns success.
    *

@@ -1,0 +1,21 @@
+@if (loading()) {
+  <div class="category-details-card category-details-card--loading">
+    <span class="category-details-card__placeholder">Loading category…</span>
+  </div>
+} @else if (category(); as category) {
+  <div class="category-details-card">
+    <h3 class="category-details-card__heading">Blog Category</h3>
+    <div class="category-details-card__field">
+      <span class="category-details-card__label">Title</span>
+      <p class="category-details-card__value">{{ category.title }}</p>
+    </div>
+    <div class="category-details-card__field">
+      <span class="category-details-card__label">Description</span>
+      <p class="category-details-card__value">{{ category.description }}</p>
+    </div>
+  </div>
+} @else {
+  <div class="category-details-card category-details-card--empty">
+    <span class="category-details-card__placeholder">Category details are unavailable.</span>
+  </div>
+}

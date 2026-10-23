@@ -1,6 +1,6 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { MessageService } from 'primeng/api';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 import type { BlogCategory } from '../../models/blog-category';
 import type { BlogCategoryRequest } from '../../models/blog-category-request';
@@ -81,5 +81,24 @@ describe('BlogCategoryFormDialog', () => {
 
     expect(component['form'].touched).toBe(true);
     expect(submitHandler).not.toHaveBeenCalled();
+  });
+
+  it('should unsubscribe from the submit request when destroyed', () => {
+    const unsubscribe = vi.fn();
+    const pendingRequest = new Observable<void>((): (() => void) => () => {
+      unsubscribe();
+    });
+    fixture.componentRef.setInput('submitHandler', () => pendingRequest);
+    fixture.detectChanges();
+    component['form'].setValue({
+      slug: 'technology',
+      title: 'Technology',
+      description: 'Technology articles',
+    });
+
+    component['submit']();
+    fixture.destroy();
+
+    expect(unsubscribe).toHaveBeenCalledOnce();
   });
 });

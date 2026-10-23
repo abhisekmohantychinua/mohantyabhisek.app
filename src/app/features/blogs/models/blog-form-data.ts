@@ -7,6 +7,7 @@ export interface BlogFormData {
   topics: string[];
   faqs: FaqRequest[];
   content: string;
+  blogCategorySlug?: string;
   metaTitle: string;
   metaDescription: string;
 }

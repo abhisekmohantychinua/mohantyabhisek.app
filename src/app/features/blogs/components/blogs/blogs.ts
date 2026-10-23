@@ -78,6 +78,7 @@ export class Blogs implements OnInit, OnDestroy {
         topics: data.topics,
         faqs: data.faqs,
         content: data.content,
+        ...(data.blogCategorySlug ? { blogCategorySlug: data.blogCategorySlug } : {}),
       })
       .pipe(
         switchMap(() => {

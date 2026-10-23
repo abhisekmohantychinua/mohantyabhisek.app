@@ -2,12 +2,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
+  type OnDestroy,
   type OnInit,
   signal,
 } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import type { Observable } from 'rxjs';
+import type { Observable, Subscription } from 'rxjs';
 
 import type { BlogCategory } from '../../models/blog-category';
 import type { BlogCategoryRequest } from '../../models/blog-category-request';
@@ -22,8 +23,9 @@ import { BlogCategoryGrid } from '../blog-category-grid/blog-category-grid';
   styleUrl: './blog-categories.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BlogCategories implements OnInit {
+export class BlogCategories implements OnInit, OnDestroy {
   private readonly categoryService = inject(BlogCategoryService);
+  private categoriesSubscription?: Subscription;
 
   readonly categories = signal<BlogCategory[]>([]);
   readonly loading = signal(true);
@@ -43,6 +45,10 @@ export class BlogCategories implements OnInit {
 
   ngOnInit(): void {
     this.loadCategories();
+  }
+
+  ngOnDestroy(): void {
+    this.categoriesSubscription?.unsubscribe();
   }
 
   protected createCategory(): void {
@@ -65,7 +71,8 @@ export class BlogCategories implements OnInit {
       this.loading.set(true);
     }
 
-    this.categoryService.listCategories().subscribe({
+    this.categoriesSubscription?.unsubscribe();
+    this.categoriesSubscription = this.categoryService.listCategories().subscribe({
       next: (categories) => {
         this.categories.set(categories);
         this.loading.set(false);

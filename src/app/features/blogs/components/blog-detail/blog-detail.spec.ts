@@ -10,7 +10,10 @@ import { TagModule } from 'primeng/tag';
 
 import { BASE_URL } from '../../../../configs/app-config';
 import type { Blog } from '../../models/blog';
+import type { BlogCategory } from '../../models/blog-category';
+import type { BlogFormData } from '../../models/blog-form-data';
 import type { BlogMetadata } from '../../models/blog-metadata';
+import { BlogCategoryDetailsCard } from '../blog-category-details-card/blog-category-details-card';
 import { BlogDetail } from './blog-detail';
 
 describe('BlogDetail', () => {
@@ -55,10 +58,21 @@ describe('BlogDetail', () => {
     })
       .overrideComponent(BlogDetail, {
         set: {
-          imports: [DatePipe, ProgressSpinnerModule, TagModule, ButtonModule],
+          imports: [
+            DatePipe,
+            ProgressSpinnerModule,
+            TagModule,
+            ButtonModule,
+            BlogCategoryDetailsCard,
+          ],
           template: `
             @if (loading()) { <p-progressSpinner /> }
-            @else if (blog(); as b) { <h1 class="blog-detail__title">{{ b.title }}</h1> }
+            @else if (blog(); as b) {
+              <h1 class="blog-detail__title">{{ b.title }}</h1>
+              @if (b.blogCategorySlug) {
+                <app-blog-category-details-card [slug]="b.blogCategorySlug" />
+              }
+            }
           `,
         },
       })
@@ -101,6 +115,43 @@ describe('BlogDetail', () => {
       expect(component['blog']()).toEqual(mockBlog);
       expect(component['metadata']()).toEqual(mockMetadata);
       expect(component['loading']()).toBe(false);
+    });
+
+    describe('category details', () => {
+      it('should not render a category card when the blog has no category', async () => {
+        fixture.detectChanges();
+        flushInitialRequests();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(fixture.nativeElement.querySelector('app-blog-category-details-card')).toBeNull();
+        httpTesting.expectNone(`${BASE_URL}/api/blogs/categories/technology`);
+      });
+
+      it('should render a category card and fetch its details when the blog has a category slug', async () => {
+        fixture.detectChanges();
+        flushInitialRequests();
+        await fixture.whenStable();
+
+        component['blog'].set({ ...mockBlog, blogCategorySlug: 'technology' });
+        fixture.detectChanges();
+
+        const categoryUrl = `${BASE_URL}/api/blogs/categories/technology`;
+        const categoryRequest = httpTesting.expectOne(categoryUrl);
+        const category: BlogCategory = {
+          slug: 'technology',
+          title: 'Technology',
+          description: 'Technology articles',
+          createdAt: '2026-01-01T00:00:00Z',
+          lastModifiedAt: '2026-01-02T00:00:00Z',
+        };
+        categoryRequest.flush(category);
+        fixture.detectChanges();
+
+        expect(fixture.nativeElement.querySelector('app-blog-category-details-card')).toBeTruthy();
+        expect(fixture.nativeElement.textContent).toContain('Technology');
+        expect(fixture.nativeElement.textContent).toContain('Technology articles');
+      });
     });
 
     it('should show spinner while loading', () => {
@@ -159,6 +210,30 @@ describe('BlogDetail', () => {
       await fixture.whenStable();
 
       expect(component['blog']()).toEqual(mockBlog);
+    });
+  });
+
+  describe('editHandler', () => {
+    it('should include the selected category slug in the update payload', () => {
+      const data: BlogFormData = {
+        slug: testSlug,
+        title: 'Updated title',
+        description: 'Updated description',
+        topics: ['angular'],
+        faqs: [{ question: 'Q?', answer: 'A.' }],
+        content: 'Updated content',
+        blogCategorySlug: 'technology',
+        metaTitle: '',
+        metaDescription: '',
+      };
+      component['blog'].set(mockBlog);
+
+      component['editHandler'](data).subscribe();
+
+      const req = httpTesting.expectOne(blogUrl);
+      expect(req.request.method).toBe('PATCH');
+      expect(req.request.body.blogCategorySlug).toBe('technology');
+      req.flush(null);
     });
   });
 

@@ -10,5 +10,6 @@ export interface Blog {
   topics: string[];
   faqs: Faq[];
   content: string;
+  blogCategorySlug?: string;
 }
 export type BlogStatus = 'PUBLISHED' | 'UNPUBLISHED';

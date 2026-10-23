@@ -23,6 +23,7 @@ import type { BlogFormData } from '../../models/blog-form-data';
 import type { BlogMetadata } from '../../models/blog-metadata';
 import { BlogMetadataService } from '../../services/blog-metadata-service';
 import { BlogService } from '../../services/blog-service';
+import { BlogCategoryDetailsCard } from '../blog-category-details-card/blog-category-details-card';
 import { BlogFormDialog } from '../blog-form-dialog/blog-form-dialog';
 import { BlogMetadataCard } from '../blog-metadata-card/blog-metadata-card';
 import { ContentViewer } from '../content-viewer/content-viewer';
@@ -37,6 +38,7 @@ import { ContentViewer } from '../content-viewer/content-viewer';
     ConfirmDialogModule,
     ProgressSpinnerModule,
     TagModule,
+    BlogCategoryDetailsCard,
     BlogFormDialog,
     BlogMetadataCard,
     ContentViewer,
@@ -77,6 +79,7 @@ export class BlogDetail implements OnInit {
         topics: data.topics,
         faqs: data.faqs,
         content: data.content,
+        ...(data.blogCategorySlug ? { blogCategorySlug: data.blogCategorySlug } : {}),
       })
       .pipe(
         switchMap(() => {

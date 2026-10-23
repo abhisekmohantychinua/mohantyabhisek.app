@@ -14,10 +14,11 @@
   >
     <p-step-list>
       <p-step [value]="1">Basic Info</p-step>
-      <p-step [value]="2">Topics</p-step>
-      <p-step [value]="3">FAQs</p-step>
-      <p-step [value]="4">Content</p-step>
-      <p-step [value]="5">Metadata</p-step>
+      <p-step [value]="2">Category</p-step>
+      <p-step [value]="3">Topics</p-step>
+      <p-step [value]="4">FAQs</p-step>
+      <p-step [value]="5">Content</p-step>
+      <p-step [value]="6">Metadata</p-step>
     </p-step-list>
 
     <p-step-panels>
@@ -46,7 +47,7 @@
       <p-step-panel [value]="2">
         <ng-template #content let-activateCallback="activateCallback">
           <div class="form-dialog__panel">
-            <app-blog-topics-step [initialTopics]="blog()?.topics" />
+            <app-blog-category-step [initialCategorySlug]="blog()?.blogCategorySlug" />
             <div class="form-dialog__actions">
               <p-button
                 label="Cancel"
@@ -74,7 +75,7 @@
       <p-step-panel [value]="3">
         <ng-template #content let-activateCallback="activateCallback">
           <div class="form-dialog__panel">
-            <app-blog-faqs-step [initialFaqs]="blog()?.faqs" />
+            <app-blog-topics-step [initialTopics]="blog()?.topics" />
             <div class="form-dialog__actions">
               <p-button
                 label="Cancel"
@@ -102,7 +103,7 @@
       <p-step-panel [value]="4">
         <ng-template #content let-activateCallback="activateCallback">
           <div class="form-dialog__panel">
-            <app-blog-content-step [initialContent]="blog()?.content" />
+            <app-blog-faqs-step [initialFaqs]="blog()?.faqs" />
             <div class="form-dialog__actions">
               <p-button
                 label="Cancel"
@@ -128,6 +129,34 @@
       </p-step-panel>
 
       <p-step-panel [value]="5">
+        <ng-template #content let-activateCallback="activateCallback">
+          <div class="form-dialog__panel">
+            <app-blog-content-step [initialContent]="blog()?.content" />
+            <div class="form-dialog__actions">
+              <p-button
+                label="Cancel"
+                severity="secondary"
+                [outlined]="true"
+                (onClick)="cancel()"
+              />
+              <p-button
+                label="Back"
+                icon="pi pi-arrow-left"
+                severity="secondary"
+                (onClick)="goBack(activateCallback)"
+              />
+              <p-button
+                label="Next"
+                icon="pi pi-arrow-right"
+                iconPos="right"
+                (onClick)="goNext(activateCallback)"
+              />
+            </div>
+          </div>
+        </ng-template>
+      </p-step-panel>
+
+      <p-step-panel [value]="6">
         <ng-template #content let-activateCallback="activateCallback">
           <div class="form-dialog__panel">
             <app-blog-metadata-step [metadata]="metadata()" />

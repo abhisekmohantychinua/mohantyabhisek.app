@@ -2,8 +2,11 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { NGX_MONACO_EDITOR_CONFIG } from 'ngx-monaco-editor-v2';
 import { MessageService } from 'primeng/api';
+import type { Observable } from 'rxjs';
 import { of } from 'rxjs';
 
+import type { BlogCategory } from '../../models/blog-category';
+import { BlogCategoryService } from '../../services/blog-category-service';
 import { BlogFormDialog } from './blog-form-dialog';
 
 describe('BlogFormDialog', () => {
@@ -13,7 +16,14 @@ describe('BlogFormDialog', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [BlogFormDialog],
-      providers: [MessageService, { provide: NGX_MONACO_EDITOR_CONFIG, useValue: {} }],
+      providers: [
+        MessageService,
+        { provide: NGX_MONACO_EDITOR_CONFIG, useValue: {} },
+        {
+          provide: BlogCategoryService,
+          useValue: { listCategories: (): Observable<BlogCategory[]> => of([]) },
+        },
+      ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
@@ -44,6 +54,7 @@ describe('BlogFormDialog', () => {
       topics: [],
       faqs: [],
       content: '',
+      blogCategorySlug: 'technology',
     });
     fixture.detectChanges();
     expect(component['isEditMode']()).toBe(true);
@@ -52,6 +63,19 @@ describe('BlogFormDialog', () => {
 
   it('should start at step 1', () => {
     expect(component['activeStep']()).toBe(1);
+  });
+
+  it('should allow progressing through the optional category step', () => {
+    expect(component['canProceedFromStep'](2)).toBe(true);
+  });
+
+  it('should place the category step after basic info and before topics', () => {
+    const stepLabels = Array.from(
+      fixture.nativeElement.querySelectorAll('p-step'),
+      (element: Element) => element.textContent?.replace(/^\d+/, '').trim(),
+    );
+
+    expect(stepLabels).toEqual(['Basic Info', 'Category', 'Topics', 'FAQs', 'Content', 'Metadata']);
   });
 
   it('should update activeStep on onStepChange', () => {

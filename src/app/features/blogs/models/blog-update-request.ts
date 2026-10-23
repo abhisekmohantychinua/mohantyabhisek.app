@@ -6,4 +6,5 @@ export interface BlogUpdateRequest {
   topics?: string[];
   faqs?: FaqRequest[];
   content?: string;
+  blogCategorySlug?: string;
 }

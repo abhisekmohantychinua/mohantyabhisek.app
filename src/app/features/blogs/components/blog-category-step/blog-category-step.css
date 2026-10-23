@@ -1,0 +1,31 @@
+@reference "../../../../../styles.css";
+
+.category-step {
+  @apply flex flex-col gap-3;
+  min-height: 12rem;
+}
+
+.category-step__label {
+  @apply text-sm font-medium
+    text-surface-700 dark:text-surface-200;
+}
+
+.category-step__option {
+  @apply flex min-w-0 flex-col gap-1;
+}
+
+.category-step__option-title {
+  @apply font-medium text-surface-900 dark:text-surface-0;
+}
+
+.category-step__option-description {
+  @apply text-sm text-surface-500 dark:text-surface-400 line-clamp-1;
+}
+
+.category-step__hint {
+  @apply text-sm text-surface-500 dark:text-surface-400;
+}
+
+.category-step__error {
+  @apply text-sm text-red-600 dark:text-red-400;
+}
