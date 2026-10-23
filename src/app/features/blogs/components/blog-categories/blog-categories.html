@@ -1,0 +1,24 @@
+<section class="blog-categories">
+  <header class="blog-categories__header">
+    <h1 class="blog-categories__title">Blog Categories</h1>
+    <p-button label="Create Category" icon="pi pi-plus" (onClick)="createCategory()" />
+  </header>
+
+  @if (loading()) {
+    <div class="blog-categories__spinner">
+      <p-progressspinner ariaLabel="Loading blog categories" />
+    </div>
+  } @else {
+    <app-blog-category-grid
+      [categories]="categories()"
+      (editRequested)="editCategory($event)"
+    />
+  }
+
+  <app-blog-category-form-dialog
+    [(visible)]="formDialogVisible"
+    [category]="selectedCategory()"
+    [submitHandler]="submitHandler"
+    (saved)="onSaved()"
+  />
+</section>

@@ -26,10 +26,11 @@ describe('DashboardLayout', () => {
   });
 
   describe('menuItems', () => {
-    it('should contain Home and Blogs entries', () => {
-      expect(component.menuItems.length).toBe(2);
+    it('should contain Home, Blogs, and Categories entries', () => {
+      expect(component.menuItems.length).toBe(3);
       expect(component.menuItems[0].label).toBe('Home');
       expect(component.menuItems[1].label).toBe('Blogs');
+      expect(component.menuItems[2].label).toBe('Categories');
     });
   });
 
@@ -49,7 +50,7 @@ describe('DashboardLayout', () => {
       fixture.detectChanges();
       const el = fixture.nativeElement as HTMLElement;
       const navItems = el.querySelectorAll('.dashboard-layout__nav-item');
-      expect(navItems.length).toBe(2);
+      expect(navItems.length).toBe(3);
     });
 
     it('should render dividers', () => {

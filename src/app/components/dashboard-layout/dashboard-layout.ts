@@ -26,5 +26,6 @@ export class DashboardLayout {
   readonly menuItems: MenuItem[] = [
     { label: 'Home', icon: 'pi pi-home', routerLink: '/' },
     { label: 'Blogs', icon: 'pi pi-book', routerLink: '/blogs' },
+    { label: 'Categories', icon: 'pi pi-folder', routerLink: '/blogs/categories' },
   ];
 }
