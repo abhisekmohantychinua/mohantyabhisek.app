@@ -1,7 +1,7 @@
 <div class="dashboard-layout">
   <aside class="dashboard-layout__sidebar">
     <div class="dashboard-layout__brand">
-      <i class="pi pi-bolt dashboard-layout__brand-icon"></i>
+      <i class="pi pi-th-large dashboard-layout__brand-icon"></i>
       <span class="dashboard-layout__brand-text">Dashboard</span>
     </div>
     <p-divider />
@@ -10,8 +10,7 @@
         <a
           pRipple
           [routerLink]="item.routerLink"
-          routerLinkActive="dashboard-layout__nav-item--active"
-          [routerLinkActiveOptions]="{ exact: item.routerLink === '/' }"
+          [class.dashboard-layout__nav-item--active]="isMenuItemActive(item)"
           class="dashboard-layout__nav-item"
         >
           <i [class]="item.icon"></i>

@@ -1,23 +1,35 @@
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { Component } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 
 import { DashboardLayout } from './dashboard-layout';
+
+@Component({
+  template: '',
+})
+class EmptyRoute {}
 
 describe('DashboardLayout', () => {
   let component: DashboardLayout;
   let fixture: ComponentFixture<DashboardLayout>;
+  let router: Router;
 
   beforeEach(async () => {
     sessionStorage.clear();
     await TestBed.configureTestingModule({
       imports: [DashboardLayout],
-      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideRouter([{ path: '**', component: EmptyRoute }]),
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DashboardLayout);
     component = fixture.componentInstance;
+    router = TestBed.inject(Router);
     await fixture.whenStable();
   });
 
@@ -51,6 +63,28 @@ describe('DashboardLayout', () => {
       const el = fixture.nativeElement as HTMLElement;
       const navItems = el.querySelectorAll('.dashboard-layout__nav-item');
       expect(navItems.length).toBe(3);
+    });
+
+    it('should only highlight Categories on category routes', async () => {
+      await router.navigateByUrl('/blogs/categories/example');
+      fixture.detectChanges();
+
+      const navItems = fixture.nativeElement.querySelectorAll(
+        '.dashboard-layout__nav-item',
+      ) as NodeListOf<HTMLElement>;
+      expect(navItems[1].classList.contains('dashboard-layout__nav-item--active')).toBe(false);
+      expect(navItems[2].classList.contains('dashboard-layout__nav-item--active')).toBe(true);
+    });
+
+    it('should keep Blogs highlighted on blog detail routes', async () => {
+      await router.navigateByUrl('/blogs/example');
+      fixture.detectChanges();
+
+      const navItems = fixture.nativeElement.querySelectorAll(
+        '.dashboard-layout__nav-item',
+      ) as NodeListOf<HTMLElement>;
+      expect(navItems[1].classList.contains('dashboard-layout__nav-item--active')).toBe(true);
+      expect(navItems[2].classList.contains('dashboard-layout__nav-item--active')).toBe(false);
     });
 
     it('should render dividers', () => {
