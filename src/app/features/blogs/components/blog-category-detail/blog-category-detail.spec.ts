@@ -5,6 +5,7 @@ import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
 import { BASE_URL } from '../../../../configs/app-config';
+import type { Blog } from '../../models/blog';
 import type { BlogCategory } from '../../models/blog-category';
 import { BlogCategoryDetail } from './blog-category-detail';
 
@@ -16,6 +17,7 @@ describe('BlogCategoryDetail', () => {
 
   const categorySlug = 'technology';
   const categoryUrl = `${BASE_URL}/api/blogs/categories/${categorySlug}`;
+  const categoryBlogsUrl = `${categoryUrl}/blogs`;
   const mockCategory: BlogCategory = {
     slug: categorySlug,
     title: 'Technology',
@@ -23,6 +25,20 @@ describe('BlogCategoryDetail', () => {
     createdAt: '2026-01-01T12:00:00Z',
     lastModifiedAt: '2026-02-01T12:00:00Z',
   };
+  const mockBlogs: Blog[] = [
+    {
+      slug: 'angular-signals',
+      title: 'Angular Signals',
+      description: 'An introduction to signals',
+      status: 'PUBLISHED',
+      postedAt: '2026-01-01T00:00:00Z',
+      lastModifiedAt: '2026-01-02T00:00:00Z',
+      topics: [],
+      faqs: [],
+      content: '',
+      blogCategorySlug: categorySlug,
+    },
+  ];
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -55,14 +71,20 @@ describe('BlogCategoryDetail', () => {
     const req = httpTesting.expectOne(categoryUrl);
     expect(req.request.method).toBe('GET');
     req.flush(mockCategory);
+    const blogsReq = httpTesting.expectOne(categoryBlogsUrl);
+    expect(blogsReq.request.method).toBe('GET');
+    blogsReq.flush(mockBlogs);
     fixture.detectChanges();
 
     expect(component['category']()).toEqual(mockCategory);
+    expect(component['blogs']()).toEqual(mockBlogs);
     expect(component['loading']()).toBe(false);
     expect(fixture.nativeElement.textContent).toContain('Technology');
     expect(fixture.nativeElement.textContent).toContain('Technology articles');
     expect(fixture.nativeElement.textContent).toContain('Created:');
     expect(fixture.nativeElement.textContent).toContain('Modified:');
+    expect(fixture.nativeElement.querySelector('app-blog-card')).toBeTruthy();
+    expect(fixture.nativeElement.textContent).toContain('Angular Signals');
   });
 
   it('should show loading state before the category is loaded', () => {
@@ -71,6 +93,21 @@ describe('BlogCategoryDetail', () => {
     expect(fixture.nativeElement.querySelector('p-progressspinner')).toBeTruthy();
 
     httpTesting.expectOne(categoryUrl).flush(mockCategory);
+    httpTesting.expectOne(categoryBlogsUrl).flush(mockBlogs);
+  });
+
+  it('should show an error when category blogs cannot be loaded', () => {
+    fixture.detectChanges();
+    httpTesting.expectOne(categoryUrl).flush(mockCategory);
+    httpTesting.expectOne(categoryBlogsUrl).flush(
+      { message: 'Request failed' },
+      { status: 500, statusText: 'Server Error' },
+    );
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('[role="alert"]')?.textContent).toContain(
+      'Blogs for this category could not be loaded.',
+    );
   });
 
   it('should open the public category URL in a new tab', () => {
@@ -89,6 +126,7 @@ describe('BlogCategoryDetail', () => {
   it('should edit the loaded category and reload after save', () => {
     fixture.detectChanges();
     httpTesting.expectOne(categoryUrl).flush(mockCategory);
+    httpTesting.expectOne(categoryBlogsUrl).flush(mockBlogs);
     component['category'].set(mockCategory);
 
     component['editHandler']({
@@ -134,10 +172,12 @@ describe('BlogCategoryDetail', () => {
 
   it('should unsubscribe the pending category request on destroy', () => {
     fixture.detectChanges();
-    const req = httpTesting.expectOne(categoryUrl);
+    const categoryReq = httpTesting.expectOne(categoryUrl);
+    const blogsReq = httpTesting.expectOne(categoryBlogsUrl);
 
     fixture.destroy();
 
-    expect(req.cancelled).toBe(true);
+    expect(categoryReq.cancelled).toBe(true);
+    expect(blogsReq.cancelled).toBe(true);
   });
 });

@@ -15,10 +15,12 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import type { Observable, Subscription } from 'rxjs';
 import { throwError } from 'rxjs';
 
+import type { Blog } from '../../models/blog';
 import type { BlogCategory } from '../../models/blog-category';
 import type { BlogCategoryRequest } from '../../models/blog-category-request';
 import { BlogCategoryService } from '../../services/blog-category-service';
 import { BlogCategoryFormDialog } from '../blog-category-form-dialog/blog-category-form-dialog';
+import { BlogGrid } from '../blog-grid/blog-grid';
 
 @Component({
   selector: 'app-blog-category-detail',
@@ -28,6 +30,7 @@ import { BlogCategoryFormDialog } from '../blog-category-form-dialog/blog-catego
     ConfirmDialogModule,
     ProgressSpinnerModule,
     BlogCategoryFormDialog,
+    BlogGrid,
   ],
   providers: [ConfirmationService],
   templateUrl: './blog-category-detail.html',
@@ -41,10 +44,14 @@ export class BlogCategoryDetail implements OnInit, OnDestroy {
   private readonly confirmationService = inject(ConfirmationService);
 
   protected readonly category = signal<BlogCategory | undefined>(undefined);
+  protected readonly blogs = signal<Blog[]>([]);
   protected readonly loading = signal(true);
+  protected readonly blogsLoading = signal(true);
+  protected readonly blogsError = signal(false);
   protected readonly editDialogVisible = signal(false);
 
   private categorySubscription?: Subscription;
+  private blogsSubscription?: Subscription;
   private deleteSubscription?: Subscription;
 
   protected readonly externalUrl = (): string =>
@@ -64,10 +71,17 @@ export class BlogCategoryDetail implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadCategory();
+    const slug = this.route.snapshot.paramMap.get('slug');
+    if (slug) {
+      this.loadCategoryBlogs(slug);
+    } else {
+      this.blogsLoading.set(false);
+    }
   }
 
   ngOnDestroy(): void {
     this.categorySubscription?.unsubscribe();
+    this.blogsSubscription?.unsubscribe();
     this.deleteSubscription?.unsubscribe();
   }
 
@@ -121,6 +135,22 @@ export class BlogCategoryDetail implements OnInit, OnDestroy {
       },
       error: () => {
         this.loading.set(false);
+      },
+    });
+  }
+
+  private loadCategoryBlogs(slug: string): void {
+    this.blogsLoading.set(true);
+    this.blogsError.set(false);
+    this.blogsSubscription?.unsubscribe();
+    this.blogsSubscription = this.categoryService.listBlogsByCategory(slug).subscribe({
+      next: (blogs) => {
+        this.blogs.set(blogs);
+        this.blogsLoading.set(false);
+      },
+      error: () => {
+        this.blogsLoading.set(false);
+        this.blogsError.set(true);
       },
     });
   }

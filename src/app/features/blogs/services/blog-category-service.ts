@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import type { Observable } from 'rxjs';
 
 import { BASE_URL } from '../../../configs/app-config';
+import type { Blog } from '../models/blog';
 import type { BlogCategory } from '../models/blog-category';
 import type { BlogCategoryRequest } from '../models/blog-category-request';
 import type { BlogCategoryUpdateRequest } from '../models/blog-category-update-request';
@@ -41,6 +42,16 @@ export class BlogCategoryService {
    */
   getCategoryBySlug(slug: string): Observable<BlogCategory> {
     return this.http.get<BlogCategory>(`${this.baseUrl}/${slug}`);
+  }
+
+  /**
+   * Retrieves all blogs assigned to a category by its exact slug.
+   *
+   * @param slug - The exact category slug.
+   * @returns An observable emitting the category's blogs.
+   */
+  listBlogsByCategory(slug: string): Observable<Blog[]> {
+    return this.http.get<Blog[]>(`${this.baseUrl}/${slug}/blogs`);
   }
 
   /**

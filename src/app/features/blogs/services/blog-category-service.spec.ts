@@ -3,6 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 
 import { BASE_URL } from '../../../configs/app-config';
+import type { Blog } from '../models/blog';
 import type { BlogCategory } from '../models/blog-category';
 import type { BlogCategoryRequest } from '../models/blog-category-request';
 import type { BlogCategoryUpdateRequest } from '../models/blog-category-update-request';
@@ -76,6 +77,31 @@ describe('BlogCategoryService', () => {
     const req = httpTesting.expectOne(`${baseUrl}/technology`);
     expect(req.request.method).toBe('GET');
     req.flush(category);
+  });
+
+  it('should GET blogs assigned to a category by slug', () => {
+    const blogs: Blog[] = [
+      {
+        slug: 'angular-signals',
+        title: 'Angular Signals',
+        description: 'An introduction to signals',
+        status: 'PUBLISHED',
+        postedAt: '2026-01-01T00:00:00Z',
+        lastModifiedAt: '2026-01-02T00:00:00Z',
+        topics: [],
+        faqs: [],
+        content: '',
+        blogCategorySlug: 'technology',
+      },
+    ];
+
+    service.listBlogsByCategory('technology').subscribe((response) => {
+      expect(response).toEqual(blogs);
+    });
+
+    const req = httpTesting.expectOne(`${baseUrl}/technology/blogs`);
+    expect(req.request.method).toBe('GET');
+    req.flush(blogs);
   });
 
   it('should DELETE a category by slug', () => {

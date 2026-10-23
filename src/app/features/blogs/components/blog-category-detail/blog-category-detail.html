@@ -55,5 +55,20 @@
       [submitHandler]="editHandler"
       (saved)="onSaved()"
     />
+
+    <section class="blog-category-detail__blogs" aria-labelledby="category-blogs-title">
+      <h2 id="category-blogs-title" class="blog-category-detail__blogs-title">Blogs</h2>
+      @if (blogsLoading()) {
+        <div class="blog-category-detail__blogs-spinner">
+          <p-progressspinner ariaLabel="Loading blogs in this category" />
+        </div>
+      } @else if (blogsError()) {
+        <p class="blog-category-detail__blogs-error" role="alert">
+          Blogs for this category could not be loaded. Please try again later.
+        </p>
+      } @else {
+        <app-blog-grid [blogs]="blogs()" />
+      }
+    </section>
   </article>
 }

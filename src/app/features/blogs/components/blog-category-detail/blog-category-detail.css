@@ -42,3 +42,20 @@
 .blog-category-detail__fab {
   @apply fixed right-8 bottom-8;
 }
+
+.blog-category-detail__blogs {
+  @apply flex flex-col gap-4;
+}
+
+.blog-category-detail__blogs-title {
+  @apply m-0 text-xl font-semibold
+    text-surface-900 dark:text-surface-0;
+}
+
+.blog-category-detail__blogs-spinner {
+  @apply flex items-center justify-center py-10;
+}
+
+.blog-category-detail__blogs-error {
+  @apply m-0 text-sm text-red-600 dark:text-red-400;
+}
