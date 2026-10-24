@@ -9,14 +9,7 @@ import { ThemeToggle } from '../theme-toggle/theme-toggle';
 
 @Component({
   selector: 'app-dashboard-layout',
-  imports: [
-    RouterOutlet,
-    RouterLink,
-    DividerModule,
-    RippleModule,
-    ThemeToggle,
-    Logout,
-  ],
+  imports: [RouterOutlet, RouterLink, DividerModule, RippleModule, ThemeToggle, Logout],
   templateUrl: './dashboard-layout.html',
   styleUrl: './dashboard-layout.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -49,7 +42,7 @@ export class DashboardLayout {
   readonly menuItems: MenuItem[] = [
     { label: 'Home', icon: 'pi pi-home', routerLink: '/' },
     { label: 'Blogs', icon: 'pi pi-book', routerLink: '/blogs' },
-    { label: 'Categories', icon: 'pi pi-tags', routerLink: '/blogs/categories' },
+    { label: 'Blog Categories', icon: 'pi pi-tags', routerLink: '/blogs/categories' },
   ];
 
   protected isMenuItemActive(item: MenuItem): boolean {
