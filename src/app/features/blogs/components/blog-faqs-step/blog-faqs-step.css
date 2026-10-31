@@ -25,6 +25,11 @@
   @apply flex gap-2;
 }
 
+.faqs-step__count {
+  @apply -mb-2 text-sm font-medium
+    text-surface-600 dark:text-surface-300;
+}
+
 .faqs-step__list {
   @apply flex flex-col gap-2;
 }

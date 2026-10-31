@@ -30,6 +30,12 @@ describe('BlogFaqsStep', () => {
     it('should have empty faqs list', () => {
       expect(component.getValue()).toEqual([]);
     });
+
+    it('should show the FAQ count', () => {
+      expect(fixture.nativeElement.querySelector('.faqs-step__count').textContent.trim()).toBe(
+        '0 FAQs added',
+      );
+    });
   });
 
   describe('initialFaqs input', () => {
@@ -57,6 +63,10 @@ describe('BlogFaqsStep', () => {
       expect(component.getValue()).toEqual([
         { question: 'What is Angular?', answer: 'A framework.' },
       ]);
+      fixture.detectChanges();
+      expect(fixture.nativeElement.querySelector('.faqs-step__count').textContent.trim()).toBe(
+        '1 FAQ added',
+      );
       expect(component['faqForm'].controls.question.value).toBe('');
       expect(component['faqForm'].controls.answer.value).toBe('');
     });

@@ -42,7 +42,7 @@ describe('DashboardLayout', () => {
       expect(component.menuItems.length).toBe(3);
       expect(component.menuItems[0].label).toBe('Home');
       expect(component.menuItems[1].label).toBe('Blogs');
-      expect(component.menuItems[2].label).toBe('Categories');
+      expect(component.menuItems[2].label).toBe('Blog Categories');
     });
   });
 

@@ -26,6 +26,10 @@
     <small class="topics-step__error">At least one topic is required.</small>
   }
 
+  <small class="topics-step__count" aria-live="polite">
+    {{ topics().length }} {{ topics().length === 1 ? 'topic' : 'topics' }} added
+  </small>
+
   <div class="topics-step__list">
     @for (topic of topics(); track topic; let i = $index) {
       <p-chip [label]="topic" [removable]="true" (onRemove)="removeTopic(i)" />

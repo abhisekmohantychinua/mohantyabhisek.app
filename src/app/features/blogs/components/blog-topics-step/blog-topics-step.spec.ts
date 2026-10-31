@@ -29,6 +29,12 @@ describe('BlogTopicsStep', () => {
     it('should have an empty topics list', () => {
       expect(component.getValue()).toEqual([]);
     });
+
+    it('should show the topic count', () => {
+      expect(fixture.nativeElement.querySelector('.topics-step__count').textContent.trim()).toBe(
+        '0 topics added',
+      );
+    });
   });
 
   describe('initialTopics input', () => {
@@ -48,6 +54,10 @@ describe('BlogTopicsStep', () => {
       component['addTopic']();
 
       expect(component.getValue()).toEqual(['Angular']);
+      fixture.detectChanges();
+      expect(fixture.nativeElement.querySelector('.topics-step__count').textContent.trim()).toBe(
+        '1 topic added',
+      );
       expect(component['topicControl'].value).toBe('');
     });
 

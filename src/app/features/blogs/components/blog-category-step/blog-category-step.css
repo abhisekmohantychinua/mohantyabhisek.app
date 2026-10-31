@@ -11,7 +11,7 @@
 }
 
 .category-step__option {
-  @apply flex min-w-0 flex-col gap-1;
+  @apply flex min-w-0 flex-1 flex-col gap-1 whitespace-normal;
 }
 
 .category-step__option-title {

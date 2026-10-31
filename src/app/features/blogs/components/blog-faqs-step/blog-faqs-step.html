@@ -65,6 +65,10 @@
     <small class="faqs-step__error">At least one FAQ is required.</small>
   }
 
+  <small class="faqs-step__count" aria-live="polite">
+    {{ faqs().length }} {{ faqs().length === 1 ? 'FAQ' : 'FAQs' }} added
+  </small>
+
   <div class="faqs-step__list">
     @for (faq of faqs(); track $index; let i = $index) {
       <div class="faqs-step__item">

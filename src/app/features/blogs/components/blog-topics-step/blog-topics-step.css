@@ -16,6 +16,11 @@
   @apply -mt-2 text-xs text-red-500;
 }
 
+.topics-step__count {
+  @apply -mb-2 text-sm font-medium
+    text-surface-600 dark:text-surface-300;
+}
+
 .topics-step__list {
   @apply flex flex-wrap gap-2;
 }
